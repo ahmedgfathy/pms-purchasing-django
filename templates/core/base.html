@@ -1,0 +1,98 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+{% get_current_language as CURRENT_LANG %}
+<html lang="{{ CURRENT_LANG }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% trans "PMS Purchasing" %}{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/logo.svg' %}?v=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1">
+</head>
+<body>
+    <div class="app">
+        <div class="topbar">
+            <span class="brand">
+                <img src="{% static 'img/logo.svg' %}?v=1" alt="PMS Purchasing">
+                <span class="brand-name"><em>P</em>MS Purchasing</span>
+            </span>
+            <div class="topbar-right">
+                <form action="{% url 'set_language' %}" method="post" class="lang-switch">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <button type="submit" name="language" value="en" class="lang-btn {% if LANGUAGE_CODE == 'en' %}active{% endif %}" title="English">
+                        <svg viewBox="0 0 60 36" class="flag" aria-hidden="true">
+                            <rect width="60" height="36" fill="#012169"/>
+                            <path d="M0,0 L60,36 M60,0 L0,36" stroke="#fff" stroke-width="8"/>
+                            <path d="M0,0 L60,36 M60,0 L0,36" stroke="#C8102E" stroke-width="4"/>
+                            <path d="M0,18 H60 M30,0 V36" stroke="#fff" stroke-width="12"/>
+                            <path d="M0,18 H60 M30,0 V36" stroke="#C8102E" stroke-width="7"/>
+                        </svg>
+                        EN
+                    </button>
+                    <button type="submit" name="language" value="ar" class="lang-btn {% if LANGUAGE_CODE == 'ar' %}active{% endif %}" title="العربية">
+                        <svg viewBox="0 0 60 36" class="flag" aria-hidden="true">
+                            <rect width="60" height="12" y="0" fill="#CE1126"/>
+                            <rect width="60" height="12" y="12" fill="#fff"/>
+                            <rect width="60" height="12" y="24" fill="#000"/>
+                            <path d="M30 11 L35 15 L30 19 L25 15 Z" fill="#C09300"/>
+                            <path d="M30 13 l2.2 2 h-4.4 z" fill="#C09300"/>
+                        </svg>
+                        عربي
+                    </button>
+                </form>
+                <span class="user-chip">{{ request.user.username }}</span>
+                <a href="{% url 'logout' %}" class="signout-btn" id="btn-signout" data-accel="g" data-target="#btn-signout">Si<u>g</u>n Out</a>
+            </div>
+        </div>
+
+        <div class="app-shell">
+            <aside class="sidebar">
+                <div class="brand-side">
+                    <img src="{% static 'img/logo.svg' %}?v=1" alt="">
+                    <span>PMS Purchasing</span>
+                </div>
+                <ul class="side-nav">
+                    {% with u=request.resolver_match.url_name %}
+                    <li class="nav-item {% if u == 'dashboard' %}active{% endif %}">
+                        <a href="{% url 'dashboard' %}" data-accel="d">
+                            <svg class="nav-icon" viewBox="0 0 16 16"><path d="M2 2h5v5H2zM9 2h5v5H9zM2 9h5v5H2zM9 9h5v5H9z"/></svg>
+                            {% if LANGUAGE_CODE == 'en' %}<u>D</u>ashboard{% else %}{% trans "Dashboard" %}{% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item nav-divider"></li>
+                    <li class="nav-item {% if u == 'my-profile' %}active{% endif %}">
+                        <a href="{% url 'dashboard' %}" data-accel="m">
+                            <svg class="nav-icon" viewBox="0 0 16 16"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zM2 14a6 6 0 0112 0"/><circle cx="8" cy="2" r="1"/><circle cx="2.5" cy="11" r="1"/><circle cx="13.5" cy="11" r="1"/></svg>
+                            {% if LANGUAGE_CODE == 'en' %}<u>M</u>y Account{% else %}{% trans "My Account" %}{% endif %}
+                        </a>
+                    </li>
+                    {% endwith %}
+                </ul>
+            </aside>
+
+            <section class="content">
+                {% if messages %}
+                <div class="message-list">
+                    {% for message in messages %}
+                    <div class="message {{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% block content %}{% endblock %}
+            </section>
+        </div>
+
+        <div class="app-footer">
+            <span>&copy; 2026 PMS Purchasing</span>
+            <span>v1.0</span>
+        </div>
+    </div>
+    <script src="{% static 'js/app.js' %}?v=1"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

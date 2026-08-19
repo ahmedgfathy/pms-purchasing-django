@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+{% load i18n %}
+{% block title %}{% trans "Dashboard" %} - {% trans "PMS Purchasing" %}{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>{% trans "Dashboard" %}</h1>
+    <p class="subtitle">{% blocktrans with uname=request.user.username %}Welcome back, {{ uname }}.{% endblocktrans %}</p>
+</div>
+
+<h2 class="section-title">{% trans "Overview" %}</h2>
+<div class="stat-cards">
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-icon"><svg viewBox="0 0 20 20"><path d="M4 16h12"/><path d="M7 16v-3a3 3 0 0 1 6 0v3"/><circle cx="10" cy="12.5" r="1.2"/></svg></div>
+            <div class="stat-label">{% trans "Vendors" %}</div>
+        </div>
+        <div class="stat-value">0</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-icon"><svg viewBox="0 0 20 20"><rect x="4" y="3" width="12" height="14" rx="2"/><path d="M8 3h4v2H8z"/><path d="M7 9h6M7 12h6"/></svg></div>
+            <div class="stat-label">{% trans "Purchase Orders" %}</div>
+        </div>
+        <div class="stat-value">0</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-icon"><svg viewBox="0 0 20 20"><rect x="1" y="5" width="11" height="8" rx="1"/><path d="M12 8h3l3 3v2h-6"/><circle cx="6" cy="15" r="1.6"/><circle cx="15" cy="15" r="1.6"/></svg></div>
+            <div class="stat-label">{% trans "RFQs" %}</div>
+        </div>
+        <div class="stat-value">0</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-top">
+            <div class="stat-icon"><svg viewBox="0 0 20 20"><path d="M10 2v16M14 5H8a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H6"/></svg></div>
+            <div class="stat-label">{% trans "Budget" %}</div>
+        </div>
+        <div class="stat-value">$0.00</div>
+    </div>
+</div>
+
+<div class="panel">
+    <div class="panel-head">
+        <h3>{% trans "Getting started" %}</h3>
+    </div>
+    <p class="subtitle">{% trans "The PMS Purchasing module is ready. Use Django admin to start building vendors, purchase orders and RFQ workflows." %}</p>
+    <p class="subtitle"><a href="{% url 'admin:index' %}">{% trans "Admin panel" %}</a></p>
+</div>
+{% endblock %}

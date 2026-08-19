@@ -1,0 +1,88 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+{% get_current_language as CURRENT_LANG %}
+<html lang="{{ CURRENT_LANG }}"{% if LANGUAGE_BIDI %} dir="rtl"{% endif %}>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "PMS Purchasing" %} - {% trans "Sign-on" %}</title>
+    <link rel="icon" href="{% static 'img/logo.svg' %}?v=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1">
+</head>
+<body class="login-body">
+    <div class="window login-window">
+        <div class="titlebar">
+            <span class="brand">
+                <img src="{% static 'img/logo.svg' %}?v=1" alt="PMS Purchasing">
+                <span class="brand-name">{% if LANGUAGE_CODE == 'en' %}<em>P</em>MS Purchasing{% else %}{% trans "PMS Purchasing" %}{% endif %}</span>
+            </span>
+            <form action="{% url 'set_language' %}" method="post" class="lang-switch">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" name="language" value="en" class="lang-btn {% if LANGUAGE_CODE == 'en' %}active{% endif %}" title="English">
+                    <svg viewBox="0 0 60 36" class="flag" aria-hidden="true">
+                        <rect width="60" height="36" fill="#012169"/>
+                        <path d="M0,0 L60,36 M60,0 L0,36" stroke="#fff" stroke-width="8"/>
+                        <path d="M0,0 L60,36 M60,0 L0,36" stroke="#C8102E" stroke-width="4"/>
+                        <path d="M0,18 H60 M30,0 V36" stroke="#fff" stroke-width="12"/>
+                        <path d="M0,18 H60 M30,0 V36" stroke="#C8102E" stroke-width="7"/>
+                    </svg>
+                    EN
+                </button>
+                <button type="submit" name="language" value="ar" class="lang-btn {% if LANGUAGE_CODE == 'ar' %}active{% endif %}" title="العربية">
+                    <svg viewBox="0 0 60 36" class="flag" aria-hidden="true">
+                        <rect width="60" height="12" y="0" fill="#CE1126"/>
+                        <rect width="60" height="12" y="12" fill="#fff"/>
+                        <rect width="60" height="12" y="24" fill="#000"/>
+                        <path d="M30 11 L35 15 L30 19 L25 15 Z" fill="#C09300"/>
+                        <path d="M30 13 l2.2 2 h-4.4 z" fill="#C09300"/>
+                    </svg>
+                    عربي
+                </button>
+            </form>
+        </div>
+        <div class="window-body">
+            <div class="login-brand">
+                <img src="{% static 'img/logo.svg' %}?v=1" alt="">
+                <span>{% if LANGUAGE_CODE == 'en' %}<b>P</b>MS PURCHASING{% else %}{% trans "PMS Purchasing" %}{% endif %}</span>
+            </div>
+
+            {% if form.errors %}
+                <div class="errorbar">PMS1052E - {% trans "Invalid user ID or password." %}</div>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}" id="login-form" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                <table class="login-fields">
+                    <tr>
+                        <td class="field-label">
+                            <label for="id_username" data-accel="s" data-target="#id_username">{% if LANGUAGE_CODE == 'en' %}U<u>s</u>ername{% else %}{% trans "Username" %}{% endif %}</label>
+                        </td>
+                        <td><input type="text" name="username" id="id_username" autofocus required autocomplete="username"></td>
+                    </tr>
+                    <tr>
+                        <td class="field-label">
+                            <label for="id_password" data-accel="p" data-target="#id_password">{% if LANGUAGE_CODE == 'en' %}<u>P</u>assword{% else %}{% trans "Password" %}{% endif %}</label>
+                        </td>
+                        <td><input type="password" name="password" id="id_password" required autocomplete="current-password"></td>
+                    </tr>
+                </table>
+                <div class="login-actions">
+                    <button type="reset" class="btn" id="btn-reset" data-accel="r" data-target="#btn-reset">{% if LANGUAGE_CODE == 'en' %}<u>R</u>eset{% else %}{% trans "Reset" %}{% endif %}</button>
+                    <button type="submit" class="btn" id="btn-signin" data-accel="i" data-target="#btn-signin">{% if LANGUAGE_CODE == 'en' %}S<u>i</u>gn In{% else %}{% trans "Sign In" %}{% endif %}</button>
+                </div>
+            </form>
+        </div>
+        <div class="statusbar">
+            <span>{% trans "Ready" %}</span>
+            <span class="status-right">PMS@localhost:3306</span>
+        </div>
+    </div>
+    <script src="{% static 'js/app.js' %}?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-19 06:48+0000\n"
+"PO-Revision-Date: 2026-08-19 06:48+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+#: templates/core/base.html:9 templates/core/dashboard.html:3
+#: templates/core/login.html:9 templates/core/login.html:21
+#: templates/core/login.html:51
+msgid "PMS Purchasing"
+msgstr "نظام المشتريات"
+
+#: templates/core/base.html:64 templates/core/dashboard.html:3
+#: templates/core/dashboard.html:6
+msgid "Dashboard"
+msgstr "لوحة التحكم"
+
+#: templates/core/base.html:71
+msgid "My Account"
+msgstr "حسابي"
+
+#: templates/core/dashboard.html:7
+#, python-format
+msgid "Welcome back, %(uname)s."
+msgstr "مرحباً بعودتك، %(uname)s."
+
+#: templates/core/dashboard.html:10
+msgid "Overview"
+msgstr "نظرة عامة"
+
+#: templates/core/dashboard.html:15
+msgid "Vendors"
+msgstr "الموردون"
+
+#: templates/core/dashboard.html:22
+msgid "Purchase Orders"
+msgstr "أوامر الشراء"
+
+#: templates/core/dashboard.html:29
+msgid "RFQs"
+msgstr "طلبات عروض الأسعار"
+
+#: templates/core/dashboard.html:36
+msgid "Budget"
+msgstr "الميزانية"
+
+#: templates/core/dashboard.html:44
+msgid "Getting started"
+msgstr "البدء"
+
+#: templates/core/dashboard.html:46
+msgid ""
+"The PMS Purchasing module is ready. Use Django admin to start building "
+"vendors, purchase orders and RFQ workflows."
+msgstr ""
+"وحدة المشتريات جاهزة. استخدم لوحة إدارة Django لبدء بناء الموردين وأوامر "
+"الشراء وسير عمل طلبات عروض الأسعار."
+
+#: templates/core/dashboard.html:47
+msgid "Admin panel"
+msgstr "لوحة الإدارة"
+
+#: templates/core/login.html:9
+msgid "Sign-on"
+msgstr "تسجيل الدخول"
+
+#: templates/core/login.html:55
+msgid "Invalid user ID or password."
+msgstr "اسم المستخدم أو كلمة المرور غير صحيحة."
+
+#: templates/core/login.html:64
+msgid "Username"
+msgstr "اسم المستخدم"
+
+#: templates/core/login.html:70
+msgid "Password"
+msgstr "كلمة المرور"
+
+#: templates/core/login.html:76
+msgid "Reset"
+msgstr "إعادة تعيين"
+
+#: templates/core/login.html:77
+msgid "Sign In"
+msgstr "تسجيل الدخول"
+
+#: templates/core/login.html:82
+msgid "Ready"
+msgstr "جاهز"

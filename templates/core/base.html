@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
 </head>
 <body>
     <div class="app">
@@ -62,6 +62,13 @@
                         <a href="{% url 'dashboard' %}" data-accel="d">
                             <svg class="nav-icon" viewBox="0 0 16 16"><path d="M2 2h5v5H2zM9 2h5v5H9zM2 9h5v5H2zM9 9h5v5H9z"/></svg>
                             {% if LANGUAGE_CODE == 'en' %}<u>D</u>ashboard{% else %}{% trans "Dashboard" %}{% endif %}
+                        </a>
+                    </li>
+                    <li class="nav-item nav-divider"></li>
+                    <li class="nav-item {% if u == 'rfq_list' or u == 'rfq_detail' or u == 'rfq_create' or u == 'rfq_edit' %}active{% endif %}">
+                        <a href="{% url 'rfq_list' %}" data-accel="r">
+                            <svg class="nav-icon" viewBox="0 0 16 16"><path d="M2 1h8l4 4v10a1 1 0 01-1 1H2a1 1 0 01-1-1V2a1 1 0 011-1z"/><path d="M10 1v4h4" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M4 8h8M4 10.5h6M4 13h4" fill="none" stroke="currentColor" stroke-width="0.8"/></svg>
+                            {% if LANGUAGE_CODE == 'en' %}<u>R</u>FQ{% else %}{% trans "RFQs" %}{% endif %}
                         </a>
                     </li>
                     <li class="nav-item nav-divider"></li>

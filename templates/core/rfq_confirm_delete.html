@@ -1,0 +1,20 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Delete RFQ" %} - PMS Purchasing{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{% trans "Delete RFQ" %} {{ rfq.request_number }}</h1>
+</div>
+
+<div class="detail-card">
+    <p>{% trans "Are you sure you want to delete RFQ" %} <strong>{{ rfq.request_number }}</strong>?</p>
+    <p>{% trans "This action cannot be undone." %}</p>
+    <form method="post" style="margin-top:1rem;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">{% trans "Delete" %}</button>
+        <a href="{% url 'rfq_detail' pk=rfq.pk %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+    </form>
+</div>
+{% endblock %}

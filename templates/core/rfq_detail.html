@@ -1,0 +1,180 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ rfq.request_number }} - PMS Purchasing{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{% trans "RFQ" %} {{ rfq.request_number }}</h1>
+    <div class="page-actions">
+        <a href="{% url 'rfq_edit' pk=rfq.pk %}" class="btn btn-primary">{% trans "Edit" %}</a>
+        <a href="{% url 'rfq_list' %}" class="btn btn-secondary">{% trans "Back to List" %}</a>
+    </div>
+</div>
+
+<div class="detail-grid">
+    <div class="detail-card">
+        <h3>{% trans "General Information" %}</h3>
+        <div class="detail-fields">
+            <div class="field-row">
+                <span class="field-label">{% trans "Mat. Req. No" %}:</span>
+                <span class="field-value">{{ rfq.request_number }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "SAP No" %}:</span>
+                <span class="field-value">{{ rfq.sap_number|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Department" %}:</span>
+                <span class="field-value">{{ rfq.requesting_department }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Vessel" %}:</span>
+                <span class="field-value">{{ rfq.vessel|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Project" %}:</span>
+                <span class="field-value">{{ rfq.project|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Location" %}:</span>
+                <span class="field-value">{{ rfq.location }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Cost Center" %}:</span>
+                <span class="field-value">{{ rfq.cost_center|default:"-" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <h3>{% trans "Procurement Details" %}</h3>
+        <div class="detail-fields">
+            <div class="field-row">
+                <span class="field-label">{% trans "Preparation Date" %}:</span>
+                <span class="field-value">{{ rfq.preparation_date }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Rec. Date" %}:</span>
+                <span class="field-value">{{ rfq.requisition_rec_date|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Market" %}:</span>
+                <span class="field-value"><span class="status-badge status-{{ rfq.market_type }}">{{ rfq.get_market_type_display }}</span></span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Purchase Method" %}:</span>
+                <span class="field-value">{{ rfq.get_purchase_method_display }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Status" %}:</span>
+                <span class="field-value"><span class="status-badge status-{{ rfq.status }}">{{ rfq.get_status_display }}</span></span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Supply Period" %}:</span>
+                <span class="field-value">{{ rfq.supply_period|default:"-" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <h3>{% trans "Budget Information" %}</h3>
+        <div class="detail-fields">
+            <div class="field-row">
+                <span class="field-label">{% trans "Budget Year" %}:</span>
+                <span class="field-value">{{ rfq.budget_year|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "G.L. Account" %}:</span>
+                <span class="field-value mono">{{ rfq.gl_account|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "E.M.F." %}:</span>
+                <span class="field-value mono">{{ rfq.emf_number|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Estimated Value" %}:</span>
+                <span class="field-value mono">{{ rfq.estimated_value|floatformat:2 }} EGP</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Budget Type" %}:</span>
+                <span class="field-value">{{ rfq.get_budget_type_display }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="detail-card" style="margin-top:1rem;">
+    <h3>{% trans "Line Items" %} ({{ items|length }})</h3>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>{% trans "Description" %}</th>
+                    <th>{% trans "Unit" %}</th>
+                    <th>{% trans "Qty" %}</th>
+                    <th>{% trans "Inventory" %}</th>
+                    <th>{% trans "Store Code" %}</th>
+                    <th>{% trans "Maker" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.line_number }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.unit }}</td>
+                    <td class="mono">{{ item.quantity }}</td>
+                    <td>{{ item.inventory }}</td>
+                    <td class="mono">{{ item.store_code }}</td>
+                    <td>{{ item.maker }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty-state">{% trans "No items." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if rfq.warranty_notes or rfq.delivery_notes %}
+<div class="detail-card" style="margin-top:1rem;">
+    <h3>{% trans "Notes" %}</h3>
+    <div class="detail-fields">
+        {% if rfq.warranty_notes %}
+        <div class="field-row">
+            <span class="field-label">{% trans "Warranty" %}:</span>
+            <span class="field-value">{{ rfq.warranty_notes }}</span>
+        </div>
+        {% endif %}
+        {% if rfq.delivery_notes %}
+        <div class="field-row">
+            <span class="field-label">{% trans "Delivery" %}:</span>
+            <span class="field-value">{{ rfq.delivery_notes }}</span>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<div class="detail-card" style="margin-top:1rem;">
+    <h3>{% trans "Approvals" %}</h3>
+    <div class="detail-fields">
+        <div class="field-row">
+            <span class="field-label">{% trans "Chairman Approved" %}:</span>
+            <span class="field-value">{% if rfq.chairman_approved %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}</span>
+        </div>
+        <div class="field-row">
+            <span class="field-label">{% trans "Approved Date" %}:</span>
+            <span class="field-value">{{ rfq.chairman_approved_date|default:"-" }}</span>
+        </div>
+        <div class="field-row">
+            <span class="field-label">{% trans "Created by" %}:</span>
+            <span class="field-value">{{ rfq.created_by|default:"-" }}</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

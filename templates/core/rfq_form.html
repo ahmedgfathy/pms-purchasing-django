@@ -1,0 +1,208 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }} - PMS Purchasing{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>{{ title }}</h1>
+    <div class="page-actions">
+        {% if action == "edit" %}
+        <a href="{% url 'rfq_detail' pk=rfq.pk %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+        {% else %}
+        <a href="{% url 'rfq_list' %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+        {% endif %}
+    </div>
+</div>
+
+<form method="post" class="rfq-form">
+    {% csrf_token %}
+
+    {% if form.errors %}
+    <div class="form-errors">
+        {% for field, errors in form.errors.items %}
+        <div class="error-msg"><strong>{{ field }}:</strong> {{ errors.0 }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="detail-grid">
+        <div class="detail-card">
+            <h3>{% trans "General Information" %}</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>{% trans "Mat. Req. No" %} *</label>
+                    {{ form.request_number }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "SAP No" %}</label>
+                    {{ form.sap_number }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Department" %} *</label>
+                    {{ form.requesting_department }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Vessel" %}</label>
+                    {{ form.vessel }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Project" %}</label>
+                    {{ form.project }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Location" %}</label>
+                    {{ form.location }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Cost Center" %}</label>
+                    {{ form.cost_center }}
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <h3>{% trans "Procurement Details" %}</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>{% trans "Preparation Date" %} *</label>
+                    {{ form.preparation_date }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Rec. Date" %}</label>
+                    {{ form.requisition_rec_date }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Market" %}</label>
+                    {{ form.market_type }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Purchase Method" %}</label>
+                    {{ form.purchase_method }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Status" %}</label>
+                    {{ form.status }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Supply Period" %}</label>
+                    {{ form.supply_period }}
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <h3>{% trans "Budget Information" %}</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>{% trans "Budget Year" %}</label>
+                    {{ form.budget_year }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "G.L. Account" %}</label>
+                    {{ form.gl_account }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "E.M.F." %}</label>
+                    {{ form.emf_number }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Estimated Value (EGP)" %}</label>
+                    {{ form.estimated_value }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Budget Type" %}</label>
+                    {{ form.budget_type }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Budget Code" %}</label>
+                    {{ form.budget_code }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card" style="margin-top:1rem;">
+        <h3>{% trans "Line Items" %}</h3>
+        {{ formset.management_form }}
+        <div class="table-wrap">
+            <table class="data-table" id="items-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>{% trans "Description" %}</th>
+                        <th>{% trans "Unit" %}</th>
+                        <th>{% trans "Qty" %}</th>
+                        <th>{% trans "Inventory" %}</th>
+                        <th>{% trans "Store Code" %}</th>
+                        <th>{% trans "Maker" %}</th>
+                        <th>{% trans "Delete" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item_form in formset %}
+                    <tr class="item-row">
+                        <td>{{ item_form.line_number }}</td>
+                        <td>{{ item_form.description }}</td>
+                        <td>{{ item_form.unit }}</td>
+                        <td>{{ item_form.quantity }}</td>
+                        <td>{{ item_form.inventory }}</td>
+                        <td>{{ item_form.store_code }}</td>
+                        <td>{{ item_form.maker }}</td>
+                        <td>{% if item_form.instance.pk %}{{ item_form.DELETE }}{% endif %}</td>
+                    </tr>
+                    {% for hidden in item_form.hidden_fields %}
+                    {{ hidden }}
+                    {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <button type="button" class="btn btn-sm" id="add-item-row">{% trans "Add Item" %}</button>
+    </div>
+
+    <div class="detail-card" style="margin-top:1rem;">
+        <h3>{% trans "Notes" %}</h3>
+        <div class="form-grid">
+            <div class="form-group form-group-full">
+                <label>{% trans "Warranty Notes" %}</label>
+                {{ form.warranty_notes }}
+            </div>
+            <div class="form-group form-group-full">
+                <label>{% trans "Delivery Notes" %}</label>
+                {{ form.delivery_notes }}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+        {% if action == "edit" %}
+        <a href="{% url 'rfq_detail' pk=rfq.pk %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+        {% else %}
+        <a href="{% url 'rfq_list' %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+        {% endif %}
+    </div>
+</form>
+
+<script>
+(function() {
+    var totalForms = document.getElementById('id_items-TOTAL_FORMS');
+    var container = document.querySelector('#items-table tbody');
+    var addBtn = document.getElementById('add-item-row');
+    var emptyRow = container.querySelector('.item-row:last-child').cloneNode(true);
+
+    addBtn.addEventListener('click', function() {
+        var idx = parseInt(totalForms.value);
+        var newRow = emptyRow.cloneNode(true);
+        newRow.querySelectorAll('input, textarea, select').forEach(function(el) {
+            el.name = el.name.replace(/-\d+-/, '-' + idx + '-');
+            el.id = el.id.replace(/-\d+-/, '-' + idx + '-');
+            el.value = '';
+        });
+        container.appendChild(newRow);
+        totalForms.value = idx + 1;
+    });
+})();
+</script>
+{% endblock %}

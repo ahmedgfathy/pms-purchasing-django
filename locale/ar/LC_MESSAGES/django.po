@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-19 06:48+0000\n"
-"PO-Revision-Date: 2026-08-19 06:48+0000\n"
+"POT-Creation-Date: 2026-09-16 07:25+0000\n"
+"PO-Revision-Date: 2026-09-16 07:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ar\n"
@@ -18,6 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
 #: templates/core/base.html:9 templates/core/dashboard.html:3
 #: templates/core/login.html:9 templates/core/login.html:21
 #: templates/core/login.html:51
@@ -29,7 +30,12 @@ msgstr "نظام المشتريات"
 msgid "Dashboard"
 msgstr "لوحة التحكم"
 
-#: templates/core/base.html:71
+#: templates/core/base.html:71 templates/core/dashboard.html:29
+#: templates/core/rfq_list.html:4 templates/core/rfq_list.html:8
+msgid "RFQs"
+msgstr "طلبات عروض الأسعار"
+
+#: templates/core/base.html:78
 msgid "My Account"
 msgstr "حسابي"
 
@@ -49,10 +55,6 @@ msgstr "الموردون"
 #: templates/core/dashboard.html:22
 msgid "Purchase Orders"
 msgstr "أوامر الشراء"
-
-#: templates/core/dashboard.html:29
-msgid "RFQs"
-msgstr "طلبات عروض الأسعار"
 
 #: templates/core/dashboard.html:36
 msgid "Budget"
@@ -101,3 +103,262 @@ msgstr "تسجيل الدخول"
 #: templates/core/login.html:82
 msgid "Ready"
 msgstr "جاهز"
+
+#: templates/core/rfq_confirm_delete.html:4
+#: templates/core/rfq_confirm_delete.html:8
+msgid "Delete RFQ"
+msgstr "حذف طلب عرض سعر"
+
+#: templates/core/rfq_confirm_delete.html:12
+msgid "Are you sure you want to delete RFQ"
+msgstr "هل أنت متأكد من حذف طلب عرض السعر"
+
+#: templates/core/rfq_confirm_delete.html:13
+msgid "This action cannot be undone."
+msgstr "لا يمكن التراجع عن هذا الإجراء."
+
+#: templates/core/rfq_confirm_delete.html:16 templates/core/rfq_form.html:139
+msgid "Delete"
+msgstr "حذف"
+
+#: templates/core/rfq_confirm_delete.html:17 templates/core/rfq_form.html:11
+#: templates/core/rfq_form.html:13 templates/core/rfq_form.html:181
+#: templates/core/rfq_form.html:183
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: templates/core/rfq_detail.html:8
+msgid "RFQ"
+msgstr "طلب عرض سعر"
+
+#: templates/core/rfq_detail.html:10
+msgid "Edit"
+msgstr "تعديل"
+
+#: templates/core/rfq_detail.html:11
+msgid "Back to List"
+msgstr "العودة للقائمة"
+
+#: templates/core/rfq_detail.html:17 templates/core/rfq_form.html:31
+msgid "General Information"
+msgstr "معلومات عامة"
+
+#: templates/core/rfq_detail.html:20 templates/core/rfq_form.html:34
+#: templates/core/rfq_list.html:38
+msgid "Mat. Req. No"
+msgstr "رقم طلب المواد"
+
+#: templates/core/rfq_detail.html:24 templates/core/rfq_form.html:38
+msgid "SAP No"
+msgstr "رقم SAP"
+
+#: templates/core/rfq_detail.html:28 templates/core/rfq_form.html:42
+#: templates/core/rfq_list.html:39
+msgid "Department"
+msgstr "الإدارة"
+
+#: templates/core/rfq_detail.html:32 templates/core/rfq_form.html:46
+msgid "Vessel"
+msgstr "الوحدة"
+
+#: templates/core/rfq_detail.html:36 templates/core/rfq_form.html:50
+msgid "Project"
+msgstr "المشروع"
+
+#: templates/core/rfq_detail.html:40 templates/core/rfq_form.html:54
+msgid "Location"
+msgstr "الموقع"
+
+#: templates/core/rfq_detail.html:44 templates/core/rfq_form.html:58
+msgid "Cost Center"
+msgstr "مركز التكلفة"
+
+#: templates/core/rfq_detail.html:51 templates/core/rfq_form.html:65
+msgid "Procurement Details"
+msgstr "تفاصيل المشتريات"
+
+#: templates/core/rfq_detail.html:54 templates/core/rfq_form.html:68
+msgid "Preparation Date"
+msgstr "تاريخ الإعداد"
+
+#: templates/core/rfq_detail.html:58 templates/core/rfq_form.html:72
+msgid "Rec. Date"
+msgstr "تاريخ الاستلام"
+
+#: templates/core/rfq_detail.html:62 templates/core/rfq_form.html:76
+#: templates/core/rfq_list.html:41
+msgid "Market"
+msgstr "السوق"
+
+#: templates/core/rfq_detail.html:66 templates/core/rfq_form.html:80
+msgid "Purchase Method"
+msgstr "طريقة الشراء"
+
+#: templates/core/rfq_detail.html:70 templates/core/rfq_form.html:84
+#: templates/core/rfq_list.html:43
+msgid "Status"
+msgstr "الحالة"
+
+#: templates/core/rfq_detail.html:74 templates/core/rfq_form.html:88
+msgid "Supply Period"
+msgstr "فترة التوريد"
+
+#: templates/core/rfq_detail.html:81 templates/core/rfq_form.html:95
+msgid "Budget Information"
+msgstr "معلومات الميزانية"
+
+#: templates/core/rfq_detail.html:84 templates/core/rfq_form.html:98
+msgid "Budget Year"
+msgstr "سنة الميزانية"
+
+#: templates/core/rfq_detail.html:88 templates/core/rfq_form.html:102
+msgid "G.L. Account"
+msgstr "الحساب العام"
+
+#: templates/core/rfq_detail.html:92 templates/core/rfq_form.html:106
+msgid "E.M.F."
+msgstr "رقم الإفراج"
+
+#: templates/core/rfq_detail.html:96
+msgid "Estimated Value"
+msgstr "القيمة التقديرية"
+
+#: templates/core/rfq_detail.html:100 templates/core/rfq_form.html:114
+msgid "Budget Type"
+msgstr "نوع الميزانية"
+
+#: templates/core/rfq_detail.html:108 templates/core/rfq_form.html:126
+msgid "Line Items"
+msgstr "بنود الأصناف"
+
+#: templates/core/rfq_detail.html:114 templates/core/rfq_form.html:133
+msgid "Description"
+msgstr "الوصف"
+
+#: templates/core/rfq_detail.html:115 templates/core/rfq_form.html:134
+msgid "Unit"
+msgstr "الوحدة"
+
+#: templates/core/rfq_detail.html:116 templates/core/rfq_form.html:135
+msgid "Qty"
+msgstr "الكمية"
+
+#: templates/core/rfq_detail.html:117 templates/core/rfq_form.html:136
+msgid "Inventory"
+msgstr "المخزون"
+
+#: templates/core/rfq_detail.html:118 templates/core/rfq_form.html:137
+msgid "Store Code"
+msgstr "كود المستودع"
+
+#: templates/core/rfq_detail.html:119 templates/core/rfq_form.html:138
+msgid "Maker"
+msgstr "الصانع"
+
+#: templates/core/rfq_detail.html:135
+msgid "No items."
+msgstr "لا توجد بنود."
+
+#: templates/core/rfq_detail.html:145 templates/core/rfq_form.html:165
+msgid "Notes"
+msgstr "ملاحظات"
+
+#: templates/core/rfq_detail.html:149
+msgid "Warranty"
+msgstr "الضمان"
+
+#: templates/core/rfq_detail.html:155
+msgid "Delivery"
+msgstr "التوريد"
+
+#: templates/core/rfq_detail.html:164
+msgid "Approvals"
+msgstr "الموافقات"
+
+#: templates/core/rfq_detail.html:167
+msgid "Chairman Approved"
+msgstr "موافقة رئيس مجلس الإدارة"
+
+#: templates/core/rfq_detail.html:168
+msgid "Yes"
+msgstr "نعم"
+
+#: templates/core/rfq_detail.html:168
+msgid "No"
+msgstr "لا"
+
+#: templates/core/rfq_detail.html:171
+msgid "Approved Date"
+msgstr "تاريخ الموافقة"
+
+#: templates/core/rfq_detail.html:175
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#: templates/core/rfq_form.html:110
+msgid "Estimated Value (EGP)"
+msgstr "القيمة التقديرية (ج.م)"
+
+#: templates/core/rfq_form.html:118
+msgid "Budget Code"
+msgstr "كود الميزانية"
+
+#: templates/core/rfq_form.html:161
+msgid "Add Item"
+msgstr "إضافة صنف"
+
+#: templates/core/rfq_form.html:168
+msgid "Warranty Notes"
+msgstr "ملاحظات الضمان"
+
+#: templates/core/rfq_form.html:172
+msgid "Delivery Notes"
+msgstr "ملاحظات التوريد"
+
+#: templates/core/rfq_form.html:179
+msgid "Save"
+msgstr "حفظ"
+
+#: templates/core/rfq_list.html:9
+msgid "New RFQ"
+msgstr "طلب عرض سعر جديد"
+
+#: templates/core/rfq_list.html:14
+msgid "Search by request number..."
+msgstr "بحث برقم الطلب..."
+
+#: templates/core/rfq_list.html:16
+msgid "All Statuses"
+msgstr "جميع الحالات"
+
+#: templates/core/rfq_list.html:22
+msgid "All Markets"
+msgstr "جميع الأسواق"
+
+#: templates/core/rfq_list.html:27
+msgid "Filter"
+msgstr "تصفية"
+
+#: templates/core/rfq_list.html:29
+msgid "Clear"
+msgstr "مسح"
+
+#: templates/core/rfq_list.html:40
+msgid "Date"
+msgstr "التاريخ"
+
+#: templates/core/rfq_list.html:42
+msgid "Method"
+msgstr "الطريقة"
+
+#: templates/core/rfq_list.html:44
+msgid "Items"
+msgstr "الأصناف"
+
+#: templates/core/rfq_list.html:45
+msgid "Est. Value"
+msgstr "القيمة التقديرية"
+
+#: templates/core/rfq_list.html:62
+msgid "No RFQs found."
+msgstr "لم يتم العثور على طلبات عروض أسعار."

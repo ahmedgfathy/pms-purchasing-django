@@ -1394,3 +1394,204 @@ table.data-clickable tbody tr {
 .badge-amber { color: #92400e; background: #fef3c7; border: 1px solid #fcd34d; }
 .badge-purple { color: #6b21a8; background: #f3e8ff; border: 1px solid #d8b4fe; }
 .badge-gray { color: #4b5563; background: #e5e7eb; border: 1px solid #d1d5db; }
+
+
+/* ---------- RFQ Module ---------- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.page-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-draft { color: #4b5563; background: #e5e7eb; border: 1px solid #d1d5db; }
+.status-submitted { color: #1e3a8a; background: #dbeafe; border: 1px solid #93c5fd; }
+.status-under_review { color: #92400e; background: #fef3c7; border: 1px solid #fcd34d; }
+.status-chairman_approved { color: #15803d; background: #dcfce7; border: 1px solid #86efac; }
+.status-rejected { color: #b91c1c; background: #fee2e2; border: 1px solid #fca5a5; }
+.status-vendor_selection { color: #6b21a8; background: #f3e8ff; border: 1px solid #d8b4fe; }
+.status-completed { color: #15803d; background: #dcfce7; border: 1px solid #86efac; }
+.status-local { color: #1e3a8a; background: #dbeafe; border: 1px solid #93c5fd; }
+.status-foreign { color: #92400e; background: #fef3c7; border: 1px solid #fcd34d; }
+
+.filter-bar {
+    margin-bottom: 14px;
+}
+
+.filter-form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-form .form-input {
+    width: auto;
+    min-width: 140px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1rem;
+}
+
+.detail-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px;
+}
+
+.detail-card h3 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.detail-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field-row {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.field-label {
+    min-width: 120px;
+    font-weight: 600;
+    color: var(--chrome-fg);
+    flex-shrink: 0;
+}
+
+.field-value {
+    color: var(--text);
+}
+
+.mono {
+    font-family: monospace;
+}
+
+.empty-state {
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    padding: 20px !important;
+}
+
+/* ---------- RFQ Form ---------- */
+.rfq-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--chrome-fg);
+}
+
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
+.form-input {
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-size: 13px;
+    font-family: inherit;
+    background: #fff;
+}
+
+.form-input:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+}
+
+.form-errors {
+    margin-bottom: 14px;
+}
+
+.error-msg {
+    padding: 8px 12px;
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    font-size: 13px;
+}
+
+.form-actions {
+    margin-top: 18px;
+    display: flex;
+    gap: 8px;
+}
+
+.item-row td {
+    padding: 4px;
+}
+
+.item-row .form-input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ---------- RTL overrides ---------- */
+[dir="rtl"] .field-row {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .field-label {
+    text-align: left;
+}
+
+[dir="rtl"] .filter-form {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .page-header {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .page-actions {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .form-actions {
+    flex-direction: row-reverse;
+}

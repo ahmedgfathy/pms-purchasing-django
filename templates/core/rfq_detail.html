@@ -177,4 +177,17 @@
         </div>
     </div>
 </div>
+
+{% if rfq.attachment %}
+<div class="detail-card" style="margin-top:1rem;">
+    <h3>{% trans "Hard Copy" %}</h3>
+    <div class="attachment-preview">
+        <a href="{{ rfq.attachment.url }}" target="_blank" class="btn btn-primary">
+            <svg viewBox="0 0 16 16" style="width:14px;height:14px;vertical-align:middle;margin-right:4px"><path d="M4 1h8l4 4v9a1 1 0 01-1 1H4a1 1 0 01-1-1V2a1 1 0 011-1z" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M9 1v4h4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+            {% trans "Download Hard Copy" %}
+        </a>
+        <span class="field-help" style="margin-left:10px">{{ rfq.attachment.name|cut:"rfq/attachments/" }}</span>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% trans "PMS Purchasing" %} - {% trans "Sign-on" %}</title>
-    <link rel="icon" href="{% static 'img/logo.svg' %}?v=1">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -17,8 +17,7 @@
     <div class="window login-window">
         <div class="titlebar">
             <span class="brand">
-                <img src="{% static 'img/logo.svg' %}?v=1" alt="PMS Purchasing">
-                <span class="brand-name">{% if LANGUAGE_CODE == 'en' %}<em>P</em>MS Purchasing{% else %}{% trans "PMS Purchasing" %}{% endif %}</span>
+                <span class="brand-name-ar">{% if LANGUAGE_CODE == 'en' %}<em>P</em>MS Purchasing{% else %}ادارة المشتريات{% endif %}<br><small>خدمات البترول البحرية</small></span>
             </span>
             <form action="{% url 'set_language' %}" method="post" class="lang-switch">
                 {% csrf_token %}
@@ -47,8 +46,8 @@
         </div>
         <div class="window-body">
             <div class="login-brand">
-                <img src="{% static 'img/logo.svg' %}?v=1" alt="">
-                <span>{% if LANGUAGE_CODE == 'en' %}<b>P</b>MS PURCHASING{% else %}{% trans "PMS Purchasing" %}{% endif %}</span>
+                <span class="brand-name-ar" style="font-size:20px">{% if LANGUAGE_CODE == 'en' %}<b>P</b>MS PURCHASING{% else %}ادارة المشتريات{% endif %}</span>
+                <br><small style="color:#888;font-size:11px">خدمات البترول البحرية</small>
             </div>
 
             {% if form.errors %}

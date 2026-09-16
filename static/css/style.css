@@ -10,11 +10,11 @@
     --border: #8a8a8a;
     --highlight: #ffffff;
     --shadow: #000000;
-    --accent: #b91c1c;
-    --accent-bright: #dc2626;
-    --accent-light: #fca5a5;
-    --accent-dark: #7f1d1d;
-    --accent-deep: #450a0a;
+    --accent: #374151;
+    --accent-bright: #4b5563;
+    --accent-light: #9ca3af;
+    --accent-dark: #1f2937;
+    --accent-deep: #111827;
 }
 
 * {
@@ -1594,4 +1594,49 @@ table.data-clickable tbody tr {
 
 [dir="rtl"] .form-actions {
     flex-direction: row-reverse;
+}
+
+
+/* ---------- Attachment ---------- */
+.attachment-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.field-help {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+
+/* ---------- Arabic brand ---------- */
+.brand-name-ar {
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.2;
+    font-family: "Cairo", sans-serif;
+    color: var(--accent);
+}
+
+.brand-name-ar small {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--chrome-fg, #555);
+    letter-spacing: 0.5px;
+}
+
+.brand-side-text {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.3;
+    font-family: "Cairo", sans-serif;
+    text-align: center;
+}
+
+.brand-side-text small {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--chrome-fg, #888);
 }

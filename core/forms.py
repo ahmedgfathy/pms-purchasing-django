@@ -16,6 +16,7 @@ class RFQForm(forms.ModelForm):
             "budget_year", "gl_account", "emf_number", "estimated_value",
             "budget_type", "budget_code", "book_number",
             "warranty_notes", "delivery_notes",
+            "attachment",
         ]
         widgets = {
             "request_number": forms.TextInput(attrs={"class": "form-input", "placeholder": "e.g. 1568"}),
@@ -34,6 +35,7 @@ class RFQForm(forms.ModelForm):
             "book_number": forms.TextInput(attrs={"class": "form-input"}),
             "warranty_notes": forms.Textarea(attrs={"class": "form-input", "rows": 2}),
             "delivery_notes": forms.Textarea(attrs={"class": "form-input", "rows": 2}),
+            "attachment": forms.ClearableFileInput(attrs={"class": "form-input", "accept": ".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.bmp,.tiff"}),
             "requesting_department": forms.Select(attrs={"class": "form-input"}),
             "vessel": forms.Select(attrs={"class": "form-input"}),
             "cost_center": forms.Select(attrs={"class": "form-input"}),

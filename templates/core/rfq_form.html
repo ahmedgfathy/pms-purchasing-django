@@ -15,7 +15,7 @@
     </div>
 </div>
 
-<form method="post" class="rfq-form">
+<form method="post" class="rfq-form" enctype="multipart/form-data">
     {% csrf_token %}
 
     {% if form.errors %}
@@ -171,6 +171,19 @@
             <div class="form-group form-group-full">
                 <label>{% trans "Delivery Notes" %}</label>
                 {{ form.delivery_notes }}
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card" style="margin-top:1rem;">
+        <h3>{% trans "Hard Copy" %}</h3>
+        <div class="form-grid">
+            <div class="form-group form-group-full">
+                <label>{% trans "Upload RFQ Document" %} ({% trans "PDF, Word, Image" %})</label>
+                {{ form.attachment }}
+                {% if form.instance.attachment %}
+                <small class="field-help">{% trans "Current file" %}: {{ form.instance.attachment.name }}</small>
+                {% endif %}
             </div>
         </div>
     </div>

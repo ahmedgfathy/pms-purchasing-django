@@ -122,6 +122,12 @@ class RFQ(models.Model):
 
     warranty_notes = models.TextField(blank=True, default="")
     delivery_notes = models.TextField(blank=True, default="")
+    attachment = models.FileField(
+        upload_to="rfq/attachments/%Y/%m/",
+        blank=True,
+        default="",
+        verbose_name="Hard Copy",
+    )
 
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
@@ -166,3 +172,69 @@ class RFQItem(models.Model):
 
     def __str__(self):
         return f"Line {self.line_number}: {self.description[:50]}"
+
+
+
+class EmployeeAccess(models.Model):
+    """Controls which AD employees can login and what they see."""
+
+    ROLE_CHOICES = [
+        ("viewer", "Viewer"),
+        ("requester", "Requester"),
+        ("purchaser", "Purchaser"),
+        ("manager", "Manager"),
+        ("admin", "Admin"),
+    ]
+
+    employee_id = models.CharField(
+        max_length=50, unique=True,
+        help_text="AD sAMAccountName (e.g. 2669)",
+    )
+    full_name = models.CharField(max_length=200, blank=True, default="")
+    department = models.ForeignKey(
+        Department, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name="employees",
+    )
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="viewer")
+    is_active = models.BooleanField(default=True)
+
+    # Module visibility
+    can_view_rfq = models.BooleanField(default=True)
+    can_create_rfq = models.BooleanField(default=False)
+    can_edit_rfq = models.BooleanField(default=False)
+    can_delete_rfq = models.BooleanField(default=False)
+    can_approve_rfq = models.BooleanField(default=False)
+
+    can_view_vendors = models.BooleanField(default=True)
+    can_create_vendors = models.BooleanField(default=False)
+
+    can_view_reports = models.BooleanField(default=True)
+    can_view_admin = models.BooleanField(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["employee_id"]
+        verbose_name = "Employee Access"
+        verbose_name_plural = "Employee Access"
+
+    def __str__(self):
+        return f"{self.employee_id} - {self.full_name or 'No name'} ({self.get_role_display()})"
+
+
+class DepartmentAccess(models.Model):
+    """Which departments can see which modules."""
+    department = models.OneToOneField(
+        Department, on_delete=models.CASCADE, related_name="access_config",
+    )
+    can_view_rfq = models.BooleanField(default=True)
+    can_create_rfq = models.BooleanField(default=True)
+    can_view_vendors = models.BooleanField(default=True)
+    can_view_reports = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Department Access"
+        verbose_name_plural = "Department Access"
+
+    def __str__(self):
+        return f"Access: {self.department}"

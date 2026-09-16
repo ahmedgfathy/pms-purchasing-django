@@ -1,28 +1,23 @@
 """
 Django settings for config project (PMS Purchasing).
-Styled identically to Trunk Shipping Services.
 """
 
 import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+import ldap
+from django_auth_ldap.config import LDAPSearch, GroupOfNamesType
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / '.env')
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-t&+0125la*hgf5ufl_ysg)f@go!r5*b4kc%%_z9*oh#x4jtl_@')
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('1', 'true', 'yes')
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',')
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -41,6 +36,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'core.middleware.EmployeeAccessMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -65,10 +61,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/6.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -84,28 +76,12 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/6.1/topics/i18n/
 
 LANGUAGE_CODE = 'en'
 
@@ -124,20 +100,12 @@ USE_TZ = True
 
 LANGUAGE_COOKIE_NAME = 'django_language'
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.1/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/6.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -148,3 +116,32 @@ CSRF_TRUSTED_ORIGINS = os.environ.get(
     'CSRF_TRUSTED_ORIGINS',
     'http://localhost,http://127.0.0.1',
 ).split(',')
+
+# ── Active Directory / LDAP (matches Laravel config) ──
+AUTHENTICATION_BACKENDS = [
+    'core.backends.ActiveDirectoryBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+AUTH_LDAP_SERVER_URI = "ldap://10.51.0.20:389"
+AUTH_LDAP_BIND_DN = "2669@pms.local"
+AUTH_LDAP_BIND_PASSWORD = os.environ.get('AUTH_LDAP_BIND_PASSWORD', 'Hana19122010!@H')
+AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    "DC=PMS,DC=LOCAL",
+    ldap.SCOPE_SUBTREE,
+    "(sAMAccountName=%(user)s)",
+)
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    "CN=Users,DC=PMS,DC=LOCAL",
+    ldap.SCOPE_SUBTREE,
+    "(objectClass=group)",
+)
+AUTH_LDAP_GROUP_TYPE = GroupOfNamesType()
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "givenName",
+    "last_name": "sn",
+    "email": "mail",
+}
+AUTH_LDAP_ALWAYS_UPDATE_USER = True
+AUTH_LDAP_CACHE_TIMEOUT = 300
+AUTH_LDAP_CONNECTION_TIMEOUT = 5

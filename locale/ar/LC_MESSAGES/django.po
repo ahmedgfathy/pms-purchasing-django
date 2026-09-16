@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 07:25+0000\n"
+"POT-Creation-Date: 2026-09-16 08:34+0000\n"
 "PO-Revision-Date: 2026-09-16 07:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -23,7 +22,7 @@ msgstr ""
 #: templates/core/login.html:9 templates/core/login.html:21
 #: templates/core/login.html:51
 msgid "PMS Purchasing"
-msgstr "نظام المشتريات"
+msgstr "ادارة المشتريات"
 
 #: templates/core/base.html:64 templates/core/dashboard.html:3
 #: templates/core/dashboard.html:6
@@ -33,11 +32,32 @@ msgstr "لوحة التحكم"
 #: templates/core/base.html:71 templates/core/dashboard.html:29
 #: templates/core/rfq_list.html:4 templates/core/rfq_list.html:8
 msgid "RFQs"
-msgstr "طلبات عروض الأسعار"
+msgstr "طلبات المهمات"
 
 #: templates/core/base.html:78
-msgid "My Account"
-msgstr "حسابي"
+msgid "Vendor List"
+msgstr "قائمة الموردين"
+
+#: templates/core/base.html:85
+msgid "Foreign Tender"
+msgstr "مناقصات خارجية"
+
+#: templates/core/base.html:91
+msgid "Local Tender"
+msgstr "مناقصات محلية"
+
+#: templates/core/base.html:97 templates/core/rfq_detail.html:62
+#: templates/core/rfq_form.html:76 templates/core/rfq_list.html:41
+msgid "Market"
+msgstr "السوق"
+
+#: templates/core/base.html:104
+msgid "Reports"
+msgstr "التقارير"
+
+#: templates/core/base.html:111
+msgid "Administration"
+msgstr "الإدارة"
 
 #: templates/core/dashboard.html:7
 #, python-format
@@ -70,7 +90,7 @@ msgid ""
 "vendors, purchase orders and RFQ workflows."
 msgstr ""
 "وحدة المشتريات جاهزة. استخدم لوحة إدارة Django لبدء بناء الموردين وأوامر "
-"الشراء وسير عمل طلبات عروض الأسعار."
+"الشراء وسير عمل طلبات المهمات."
 
 #: templates/core/dashboard.html:47
 msgid "Admin panel"
@@ -107,11 +127,11 @@ msgstr "جاهز"
 #: templates/core/rfq_confirm_delete.html:4
 #: templates/core/rfq_confirm_delete.html:8
 msgid "Delete RFQ"
-msgstr "حذف طلب عرض سعر"
+msgstr "حذف طلب المهمات"
 
 #: templates/core/rfq_confirm_delete.html:12
 msgid "Are you sure you want to delete RFQ"
-msgstr "هل أنت متأكد من حذف طلب عرض السعر"
+msgstr "هل أنت متأكد من حذف طلب المهمات"
 
 #: templates/core/rfq_confirm_delete.html:13
 msgid "This action cannot be undone."
@@ -122,14 +142,14 @@ msgid "Delete"
 msgstr "حذف"
 
 #: templates/core/rfq_confirm_delete.html:17 templates/core/rfq_form.html:11
-#: templates/core/rfq_form.html:13 templates/core/rfq_form.html:181
-#: templates/core/rfq_form.html:183
+#: templates/core/rfq_form.html:13 templates/core/rfq_form.html:194
+#: templates/core/rfq_form.html:196
 msgid "Cancel"
 msgstr "إلغاء"
 
 #: templates/core/rfq_detail.html:8
 msgid "RFQ"
-msgstr "طلب عرض سعر"
+msgstr "طلب المهمات"
 
 #: templates/core/rfq_detail.html:10
 msgid "Edit"
@@ -184,11 +204,6 @@ msgstr "تاريخ الإعداد"
 #: templates/core/rfq_detail.html:58 templates/core/rfq_form.html:72
 msgid "Rec. Date"
 msgstr "تاريخ الاستلام"
-
-#: templates/core/rfq_detail.html:62 templates/core/rfq_form.html:76
-#: templates/core/rfq_list.html:41
-msgid "Market"
-msgstr "السوق"
 
 #: templates/core/rfq_detail.html:66 templates/core/rfq_form.html:80
 msgid "Purchase Method"
@@ -295,6 +310,14 @@ msgstr "تاريخ الموافقة"
 msgid "Created by"
 msgstr "أنشئ بواسطة"
 
+#: templates/core/rfq_detail.html:183 templates/core/rfq_form.html:179
+msgid "Hard Copy"
+msgstr "النسخة الورقية"
+
+#: templates/core/rfq_detail.html:187
+msgid "Download Hard Copy"
+msgstr "تحميل النسخة الورقية"
+
 #: templates/core/rfq_form.html:110
 msgid "Estimated Value (EGP)"
 msgstr "القيمة التقديرية (ج.م)"
@@ -315,13 +338,25 @@ msgstr "ملاحظات الضمان"
 msgid "Delivery Notes"
 msgstr "ملاحظات التوريد"
 
-#: templates/core/rfq_form.html:179
+#: templates/core/rfq_form.html:182
+msgid "Upload RFQ Document"
+msgstr "رفع مستند طلب المهمات"
+
+#: templates/core/rfq_form.html:182
+msgid "PDF, Word, Image"
+msgstr "PDF, Word, صورة"
+
+#: templates/core/rfq_form.html:185
+msgid "Current file"
+msgstr "الملف الحالي"
+
+#: templates/core/rfq_form.html:192
 msgid "Save"
 msgstr "حفظ"
 
 #: templates/core/rfq_list.html:9
 msgid "New RFQ"
-msgstr "طلب عرض سعر جديد"
+msgstr "طلب مهمات جديد"
 
 #: templates/core/rfq_list.html:14
 msgid "Search by request number..."
@@ -361,4 +396,7 @@ msgstr "القيمة التقديرية"
 
 #: templates/core/rfq_list.html:62
 msgid "No RFQs found."
-msgstr "لم يتم العثور على طلبات عروض أسعار."
+msgstr "لم يتم العثور على طلبات المهمات."
+
+#~ msgid "My Account"
+#~ msgstr "حسابي"

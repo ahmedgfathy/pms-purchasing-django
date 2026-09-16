@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import CostCenter, Department, RFQ, RFQItem, Vessel
+from .models import CostCenter, Department, DepartmentAccess, EmployeeAccess, RFQ, RFQItem, Vessel
 
 
 @admin.register(Department)
@@ -42,3 +42,17 @@ class RFQAdmin(admin.ModelAdmin):
         if not change:
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
+
+
+
+@admin.register(EmployeeAccess)
+class EmployeeAccessAdmin(admin.ModelAdmin):
+    list_display = ("employee_id", "full_name", "department", "role", "is_active")
+    list_filter = ("is_active", "role", "department")
+    search_fields = ("employee_id", "full_name")
+    list_editable = ("is_active", "role")
+
+
+@admin.register(DepartmentAccess)
+class DepartmentAccessAdmin(admin.ModelAdmin):
+    list_display = ("department", "can_view_rfq", "can_create_rfq", "can_view_vendors", "can_view_reports")

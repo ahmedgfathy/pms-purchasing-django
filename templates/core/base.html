@@ -11,13 +11,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=9">
 </head>
 <body>
     <div class="app">
         <div class="topbar">
             <span class="brand">
-                <span class="brand-name-ar">ادارة المشتريات<br><small>خدمات البترول البحرية</small></span>
+                {% if LANGUAGE_CODE == 'en' %}<span class="brand-name-ar"><em>P</em>MS Purchasing<br><small>Petroleum Marine Services</small></span>{% else %}<span class="brand-name-ar">ادارة المشتريات<br><small>خدمات البترول البحرية</small></span>{% endif %}
             </span>
             <div class="topbar-right">
                 <form action="{% url 'set_language' %}" method="post" class="lang-switch">
@@ -45,14 +45,14 @@
                     </button>
                 </form>
                 <span class="user-chip">{{ request.user.username }}</span>
-                <a href="{% url 'logout' %}" class="signout-btn" id="btn-signout" data-accel="g" data-target="#btn-signout">Si<u>g</u>n Out</a>
+                <a href="{% url 'logout' %}" class="signout-btn" id="btn-signout" data-accel="g" data-target="#btn-signout">{% if LANGUAGE_CODE == 'en' %}Si<u>g</u>n Out{% else %}{% trans "Sign Out" %}{% endif %}</a>
             </div>
         </div>
 
         <div class="app-shell">
             <aside class="sidebar">
                 <div class="brand-side">
-                    <span class="brand-side-text">ادارة المشتريات<br><small>خدمات البترول البحرية</small></span>
+                    {% if LANGUAGE_CODE == 'en' %}<span class="brand-side-text">PMS Purchasing<br><small>Petroleum Marine Services</small></span>{% else %}<span class="brand-side-text">ادارة المشتريات<br><small>خدمات البترول البحرية</small></span>{% endif %}
                 </div>
                 <ul class="side-nav">
                     {% with u=request.resolver_match.url_name %}
@@ -70,21 +70,21 @@
                         </a>
                     </li>
                     <li class="nav-item nav-divider"></li>
-                    <li class="nav-item {% if u == 'vendor_list' %}active{% endif %}">
-                        <a href="{% url 'dashboard' %}" data-accel="v">
-                            <svg class="nav-icon" viewBox="0 0 16 16"><path d="M1 12h14l-1.5-5H2.5L1 12zM3 7l1-4h8l1 4"/><circle cx="4" cy="14" r="1"/><circle cx="12" cy="14" r="1"/></svg>
-                            {% trans "Vendor List" %}
+                    <li class="nav-item {% if u == 'vendor_register' or u == 'vendor_detail' or u == 'vendor_create' or u == 'vendor_edit' %}active{% endif %}">
+                        <a href="{% url 'vendor_register' %}" data-accel="n">
+                            <svg class="nav-icon" viewBox="0 0 16 16"><path d="M2 2h12v12H2z" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M5 5.5h6M5 8h6M5 10.5h4" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+                            {% trans "Vendor Register" %}
                         </a>
                     </li>
                     <li class="nav-item nav-divider"></li>
                     <li class="nav-item {% if u == 'foreign_tender' %}active{% endif %}">
-                        <a href="{% url 'dashboard' %}" data-accel="f">
+                        <a href="{% url 'foreign_tender' %}" data-accel="f">
                             <svg class="nav-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M2 8h12M8 2c2 2.5 2 9.5 0 12M8 2c-2 2.5-2 9.5 0 12" fill="none" stroke="currentColor" stroke-width="0.8"/></svg>
                             {% trans "Foreign Tender" %}
                         </a>
                     </li>
                     <li class="nav-item {% if u == 'local_tender' %}active{% endif %}">
-                        <a href="{% url 'dashboard' %}" data-accel="l">
+                        <a href="{% url 'local_tender' %}" data-accel="l">
                             <svg class="nav-icon" viewBox="0 0 16 16"><path d="M2 3h12v2H2zM2 7h8v2H2zM2 11h10v2H2z"/></svg>
                             {% trans "Local Tender" %}
                         </a>

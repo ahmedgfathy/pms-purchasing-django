@@ -3,47 +3,102 @@
 {% block title %}{% trans "Dashboard" %} - {% trans "PMS Purchasing" %}{% endblock %}
 {% block content %}
 <div class="page-header">
-    <h1>{% trans "Dashboard" %}</h1>
-    <p class="subtitle">{% blocktrans with uname=request.user.username %}Welcome back, {{ uname }}.{% endblocktrans %}</p>
+    <div class="page-header-text">
+        <h1>{% trans "Dashboard" %}</h1>
+        <p class="subtitle">{% blocktrans with uname=request.user.username %}Welcome back, {{ uname }}.{% endblocktrans %}</p>
+    </div>
 </div>
 
 <h2 class="section-title">{% trans "Overview" %}</h2>
 <div class="stat-cards">
-    <div class="stat-card">
+    {% for card in cards %}
+    <a class="stat-card" href="{{ card.href }}">
         <div class="stat-top">
-            <div class="stat-icon"><svg viewBox="0 0 20 20"><path d="M4 16h12"/><path d="M7 16v-3a3 3 0 0 1 6 0v3"/><circle cx="10" cy="12.5" r="1.2"/></svg></div>
-            <div class="stat-label">{% trans "Vendors" %}</div>
+            <div class="stat-icon">{{ card.icon|safe }}</div>
+            <div class="stat-label">{{ card.label }}</div>
         </div>
-        <div class="stat-value">0</div>
+        <div class="stat-value">{{ card.value }}</div>
+        <div class="stat-tag">{{ card.tag }}</div>
+    </a>
+    {% endfor %}
+</div>
+
+<h2 class="section-title">{% trans "Charts" %}</h2>
+<div class="chart-grid">
+    {% for chart in donuts %}
+    <div class="panel chart-panel">
+        <div class="panel-head"><h3>{{ chart.title }}</h3></div>
+        {% if chart.slices %}
+        <div class="chart-body">
+            {{ chart.svg|safe }}
+            {% include "core/_chart_legend.html" with chart=chart %}
+        </div>
+        <div class="chart-foot">{% trans "Total" %}: <strong>{{ chart.total }}</strong></div>
+        {% else %}
+        <p class="chart-empty">{% trans "No data yet" %}</p>
+        {% endif %}
     </div>
-    <div class="stat-card">
-        <div class="stat-top">
-            <div class="stat-icon"><svg viewBox="0 0 20 20"><rect x="4" y="3" width="12" height="14" rx="2"/><path d="M8 3h4v2H8z"/><path d="M7 9h6M7 12h6"/></svg></div>
-            <div class="stat-label">{% trans "Purchase Orders" %}</div>
+    {% endfor %}
+</div>
+
+<div class="chart-grid">
+    {% for chart in bars %}
+    <div class="panel chart-panel">
+        <div class="panel-head"><h3>{{ chart.title }}</h3></div>
+        {% if chart.rows %}
+        <div class="bars">
+            {% for row in chart.rows %}
+            <div class="bar-row">
+                <span class="bar-label" title="{{ row.label }}">{{ row.label }}</span>
+                <span class="bar-track"><span class="bar-fill" style="width: {{ row.pct }}%"></span></span>
+                <span class="bar-value">{{ row.value }}</span>
+            </div>
+            {% endfor %}
         </div>
-        <div class="stat-value">0</div>
+        {% else %}
+        <p class="chart-empty">{% trans "No data yet" %}</p>
+        {% endif %}
     </div>
-    <div class="stat-card">
-        <div class="stat-top">
-            <div class="stat-icon"><svg viewBox="0 0 20 20"><rect x="1" y="5" width="11" height="8" rx="1"/><path d="M12 8h3l3 3v2h-6"/><circle cx="6" cy="15" r="1.6"/><circle cx="15" cy="15" r="1.6"/></svg></div>
-            <div class="stat-label">{% trans "RFQs" %}</div>
-        </div>
-        <div class="stat-value">0</div>
+    {% endfor %}
+</div>
+
+<h2 class="section-title">{% trans "RFQ Workflow" %}</h2>
+<div class="panel chart-panel">
+    {% if rfq.chart.slices %}
+    <div class="chart-body">
+        {{ rfq.chart.svg|safe }}
+        {% include "core/_chart_legend.html" with chart=rfq.chart %}
     </div>
-    <div class="stat-card">
-        <div class="stat-top">
-            <div class="stat-icon"><svg viewBox="0 0 20 20"><path d="M10 2v16M14 5H8a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H6"/></svg></div>
-            <div class="stat-label">{% trans "Budget" %}</div>
-        </div>
-        <div class="stat-value">$0.00</div>
+    {% else %}
+    <div class="chart-empty">
+        <p>{% trans "No RFQs yet — create the first one to start the purchasing flow." %}</p>
+        <a class="btn btn-primary" href="{% url 'rfq_create' %}">{% trans "New RFQ" %}</a>
+    </div>
+    {% endif %}
+    <div class="chip-row">
+        <span class="count-chip">{% trans "RFQs" %}: {{ rfq.total }}</span>
+        <span class="count-chip">{% trans "With a tender" %}: {{ rfq.opened }}</span>
+        <span class="count-chip">{% trans "Without a tender" %}: {{ rfq.orphan }}</span>
     </div>
 </div>
 
+<h2 class="section-title">{% trans "Database Summary" %}</h2>
 <div class="panel">
-    <div class="panel-head">
-        <h3>{% trans "Getting started" %}</h3>
-    </div>
-    <p class="subtitle">{% trans "The PMS Purchasing module is ready. Use Django admin to start building vendors, purchase orders and RFQ workflows." %}</p>
-    <p class="subtitle"><a href="{% url 'admin:index' %}">{% trans "Admin panel" %}</a></p>
+    <table class="data-table summary-table">
+        <thead>
+            <tr>
+                <th>{% trans "Record" %}</th>
+                <th class="num">{% trans "Records" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in summary %}
+            <tr>
+                <td>{% if row.href %}<a href="{{ row.href }}">{{ row.label }}</a>{% else %}{{ row.label }}{% endif %}</td>
+                <td class="num">{{ row.count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

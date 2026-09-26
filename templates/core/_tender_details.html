@@ -1,0 +1,235 @@
+{% load i18n %}
+{# All details of one tender's بيان المهمات (Access [Oprations] row). #}
+{# Expects: operation.  Shared by operation_detail and rfq_detail.       #}
+<div class="detail-grid">
+    <div class="detail-card">
+        <h3>{% trans "General Information" %}</h3>
+        <div class="detail-fields">
+            <div class="field-row">
+                <span class="field-label">{% trans "Task Statement" %}:</span>
+                <span class="field-value">{{ operation.task_statement|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Operation No" %}:</span>
+                <span class="field-value mono">{{ operation.operation_no }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Year" %}:</span>
+                <span class="field-value mono">{{ operation.year|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "File Department" %}:</span>
+                <span class="field-value">{{ operation.file_dept|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Market" %}:</span>
+                <span class="field-value">
+                    <span class="status-badge status-{{ operation.market }}">{{ operation.get_market_display }}</span>
+                </span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Execution Method" %}:</span>
+                <span class="field-value">{{ operation.execution_method|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Region" %}:</span>
+                <span class="field-value">{{ operation.region|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Overall Status" %}:</span>
+                <span class="field-value">
+                    <span class="status-badge {% if operation.overall_status|lower == 'open' %}status-under_review{% else %}status-completed{% endif %}">
+                        {{ operation.overall_status|default:"-" }}
+                    </span>
+                </span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Requesting Entity" %}:</span>
+                <span class="field-value">{{ operation.requesting_entity|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Project" %}:</span>
+                <span class="field-value">{{ operation.project|default:operation.project_name|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Client Code" %}:</span>
+                <span class="field-value">{{ operation.client|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Cost Center" %}:</span>
+                <span class="field-value">{{ operation.cost_center|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Location Code" %}:</span>
+                <span class="field-value">{{ operation.location|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "SAP No" %}:</span>
+                <span class="field-value mono">{{ operation.sap_no|default:"-" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <h3>{% trans "Value and Follow-up" %}</h3>
+        <div class="detail-fields">
+            <div class="field-row">
+                <span class="field-label">{% trans "Estimated Value" %}:</span>
+                <span class="field-value mono">{{ operation.display_value|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Budget" %}:</span>
+                <span class="field-value">{{ operation.budget|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "General Supplies" %}:</span>
+                <span class="field-value">{{ operation.general_supplies|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Tender Days" %}:</span>
+                <span class="field-value mono">{{ operation.tender_days|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Total Days" %}:</span>
+                <span class="field-value mono">{{ operation.total_days|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Maker Name" %}:</span>
+                <span class="field-value">{{ operation.maker_name|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Executor Name" %}:</span>
+                <span class="field-value">{{ operation.executor_name|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Follow-up Person" %}:</span>
+                <span class="field-value">{{ operation.followup_name|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Vendor Register Executor" %}:</span>
+                <span class="field-value">{{ operation.vendor_register_executor|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Request Receiver" %}:</span>
+                <span class="field-value">{{ operation.request_receiver|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Purchase Order Status" %}:</span>
+                <span class="field-value">{{ operation.po_status|default:"-" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <h3>{% trans "Milestone Dates" %}</h3>
+        <div class="detail-fields">
+            {% if operation.requisition_rec_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Requisition Received Date" %}:</span>
+                <span class="field-value">{{ operation.requisition_rec_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.vendor_list_handover_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Vendor List Handover Date" %}:</span>
+                <span class="field-value">{{ operation.vendor_list_handover_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.list_approval_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Vendor List Approval Date" %}:</span>
+                <span class="field-value">{{ operation.list_approval_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.list_preparation_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "List Preparation Date" %}:</span>
+                <span class="field-value">{{ operation.list_preparation_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.list_sent_entity_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "List Sent to Entity Date" %}:</span>
+                <span class="field-value">{{ operation.list_sent_entity_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.list_approved_entity_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "List Approved by Entity Date" %}:</span>
+                <span class="field-value">{{ operation.list_approved_entity_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.list_sent_bd_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "List Sent to BD Date" %}:</span>
+                <span class="field-value">{{ operation.list_sent_bd_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.list_approved_bd_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "List Approved by BD Date" %}:</span>
+                <span class="field-value">{{ operation.list_approved_bd_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.execution_handover_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Execution Handover Date" %}:</span>
+                <span class="field-value">{{ operation.execution_handover_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.tender_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Tender Date" %}:</span>
+                <span class="field-value">{{ operation.tender_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.technical_opening_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Technical Opening Date" %}:</span>
+                <span class="field-value">{{ operation.technical_opening_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.financial_opening_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Financial Opening Date" %}:</span>
+                <span class="field-value">{{ operation.financial_opening_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.final_tech_report_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Final Technical Report Date" %}:</span>
+                <span class="field-value">{{ operation.final_tech_report_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.committee_presentation_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Committee Presentation Date" %}:</span>
+                <span class="field-value">{{ operation.committee_presentation_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.committee_approval_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Committee Approval Date" %}:</span>
+                <span class="field-value">{{ operation.committee_approval_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.offers_sent_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Offers Sent Date" %}:</span>
+                <span class="field-value">{{ operation.offers_sent_date }}</span>
+            </div>
+            {% endif %}
+            {% if operation.followup_handover_date %}
+            <div class="field-row">
+                <span class="field-label">{% trans "Follow-up Handover Date" %}:</span>
+                <span class="field-value">{{ operation.followup_handover_date }}</span>
+            </div>
+            {% endif %}
+            {% if not operation.requisition_rec_date and not operation.vendor_list_handover_date and not operation.tender_date %}
+            <div class="field-row">
+                <span class="field-value">{% trans "No milestone dates recorded." %}</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

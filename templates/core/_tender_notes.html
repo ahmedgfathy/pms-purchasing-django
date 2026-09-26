@@ -1,0 +1,46 @@
+{% load i18n %}
+{# Memo/notes columns of one tender (Access Memo fields). #}
+{# Expects: operation.                                    #}
+{% if operation.notes or operation.request_notes or operation.vendor_list_memo %}
+<div class="detail-card" style="margin-top:1rem;">
+    <h3>{% trans "Notes" %}</h3>
+    <div class="detail-fields">
+        {% if operation.vendor_list_memo %}
+        <div class="field-row">
+            <span class="field-label">{% trans "Vendor List" %}:</span>
+            <span class="field-value">{{ operation.vendor_list_memo }}</span>
+        </div>
+        {% endif %}
+        {% if operation.notes %}
+        <div class="field-row">
+            <span class="field-label">{% trans "Notes" %}:</span>
+            <span class="field-value">{{ operation.notes }}</span>
+        </div>
+        {% endif %}
+        {% if operation.request_notes %}
+        <div class="field-row">
+            <span class="field-label">{% trans "Request Notes" %}:</span>
+            <span class="field-value">{{ operation.request_notes }}</span>
+        </div>
+        {% endif %}
+        {% if operation.execution_notes %}
+        <div class="field-row">
+            <span class="field-label">{% trans "Execution Notes" %}:</span>
+            <span class="field-value">{{ operation.execution_notes }}</span>
+        </div>
+        {% endif %}
+        {% if operation.followup_notes %}
+        <div class="field-row">
+            <span class="field-label">{% trans "Follow-up Notes" %}:</span>
+            <span class="field-value">{{ operation.followup_notes }}</span>
+        </div>
+        {% endif %}
+        {% if operation.tech_specs %}
+        <div class="field-row">
+            <span class="field-label">{% trans "Technical Specs" %}:</span>
+            <span class="field-value">{{ operation.tech_specs }}</span>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

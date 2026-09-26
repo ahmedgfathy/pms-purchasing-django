@@ -63,16 +63,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': os.environ.get('DB_ENGINE', 'django.db.backends.postgresql'),
         'NAME': os.environ.get('DB_NAME', 'pms_purchasing'),
         'USER': os.environ.get('DB_USER', 'pms_purchasing'),
         'PASSWORD': os.environ.get('DB_PASSWORD', 'pms_purchasing'),
         'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
         'PORT': os.environ.get('DB_PORT', '3306'),
+        # MySQL/MariaDB-only options (not valid for PostgreSQL)
         'OPTIONS': {
             'charset': 'utf8mb4',
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        } if os.environ.get('DB_ENGINE', 'django.db.backends.postgresql') == 'django.db.backends.mysql' else {},
     }
 }
 
@@ -125,7 +126,10 @@ AUTHENTICATION_BACKENDS = [
 
 AUTH_LDAP_SERVER_URI = "ldap://10.51.0.20:389"
 AUTH_LDAP_BIND_DN = "2669@pms.local"
-AUTH_LDAP_BIND_PASSWORD = os.environ.get('AUTH_LDAP_BIND_PASSWORD', 'Hana19122010!@H')
+# Never hard-code the AD bind password: it must come from the environment
+# (see .env.example -> AUTH_LDAP_BIND_PASSWORD). Empty means "cannot bind",
+# which only affects LDAP logins; the local admin user still works.
+AUTH_LDAP_BIND_PASSWORD = os.environ.get('AUTH_LDAP_BIND_PASSWORD', '')
 AUTH_LDAP_USER_SEARCH = LDAPSearch(
     "DC=PMS,DC=LOCAL",
     ldap.SCOPE_SUBTREE,

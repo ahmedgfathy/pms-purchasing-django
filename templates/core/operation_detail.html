@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Operation" %} {{ operation.operation_no }} - PMS Purchasing{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-text">
+        <h1>{% trans "Operation" %} <span class="mono">{{ operation.operation_no }}</span></h1>
+        <p class="field-help">
+            <span class="status-badge status-{{ operation.market }}">{{ operation.get_market_display }}</span>
+            &middot; {{ operation.task_statement|default:"-" }}
+        </p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'vendor_register' %}" class="btn btn-secondary">{% trans "Vendor Register" %}</a>
+        <a href="{% if operation.market == 'local' %}{% url 'local_tender' %}{% else %}{% url 'foreign_tender' %}{% endif %}" class="btn btn-secondary">
+            {% if operation.market == 'local' %}{% trans "Local Tender" %}{% else %}{% trans "Foreign Tender" %}{% endif %}
+        </a>
+        <a href="{% url 'rfq_list' %}" class="btn btn-secondary">{% trans "Back to List" %}</a>
+    </div>
+</div>
+
+{% include "core/_tender_details.html" with operation=operation %}
+
+{% include "core/_vendor_list_card.html" with operation=operation %}
+
+{% include "core/_tender_notes.html" with operation=operation %}
+{% endblock %}

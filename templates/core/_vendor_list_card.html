@@ -1,0 +1,142 @@
+{% load i18n %}
+{# Vendor list of one tender.  Expects: operation (the tender), vendors,#}
+{# candidates, search, scope, market.  Optional: next_url (back target),#}
+{# show_tender (rendered from the RFQ screen).                          #}
+{% url 'operation_detail' pk=operation.pk as op_url %}
+{% with back_url=next_url|default:op_url %}
+<div class="detail-card" style="margin-top:1rem;">
+    <h3>{% trans "Vendor List" %} ({{ vendors|length }})</h3>
+    {% if show_tender %}
+    <p class="field-help">
+        {% trans "Tender" %} <a href="{{ op_url }}" class="mono">#{{ operation.operation_no }}</a>
+        &middot; <span class="status-badge status-{{ operation.market }}">{{ operation.get_market_display }}</span>
+        &middot; {{ operation.file_dept|default:"-" }}
+    </p>
+    {% endif %}
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th class="col-check">#</th>
+                    <th>{% trans "Supplier ID" %}</th>
+                    <th>{% trans "Vendor Name (Arabic)" %}</th>
+                    <th>{% trans "Vendor Name (English)" %}</th>
+                    <th>{% trans "Country" %}</th>
+                    <th>{% trans "Phone 1" %}</th>
+                    <th>{% trans "E-mail" %}</th>
+                    <th>{% trans "Bid Status" %}</th>
+                    <th>{% trans "Technical Study" %}</th>
+                    <th>{% trans "PO Issuance Status" %}</th>
+                    <th class="col-actions"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for link in vendors %}
+                <tr>
+                    <td class="col-check mono">{{ link.serial|default:forloop.counter }}</td>
+                    <td class="mono"><a href="{% url 'vendor_detail' pk=link.vendor_id %}">{{ link.vendor_id }}</a></td>
+                    <td><a href="{% url 'vendor_detail' pk=link.vendor_id %}">{{ link.vendor.name_ar }}</a></td>
+                    <td>{{ link.vendor.name_en|default:"-" }}</td>
+                    <td>{{ link.vendor.country|default:"-" }}</td>
+                    <td class="mono">{{ link.vendor.phone|default:"-" }}</td>
+                    <td>{% if link.vendor.email %}<a href="mailto:{{ link.vendor.email }}" class="contact-link">{{ link.vendor.email }}</a>{% else %}-{% endif %}</td>
+                    <td>{{ link.bid_status|default:"-" }}</td>
+                    <td>{{ link.technical_study|default:"-" }}</td>
+                    <td>{{ link.po_issuance_status|default:"-" }}</td>
+                    <td class="col-actions">
+                        <form method="post" action="{% url 'operation_vendor_remove' pk=operation.pk vendor_pk=link.vendor_id %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ back_url }}">
+                            <button type="submit" class="btn btn-sm btn-danger">{% trans "Remove" %}</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="11" class="empty-state">{% trans "No vendors on this list yet." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="detail-card" style="margin-top:1rem;">
+    <h3>{% trans "Add Vendor to List" %}</h3>
+    <div class="filter-bar">
+        <form method="get" class="filter-form">
+            <input type="hidden" name="scope" value="{{ scope }}">
+            <input type="text" name="vq" value="{{ search }}" class="form-input"
+                   placeholder="{% trans "Search by supplier ID or vendor name..." %}">
+            <button type="submit" class="btn btn-sm">{% trans "Search" %}</button>
+            {% if search %}
+            <a href="{{ back_url }}" class="btn btn-sm btn-secondary">{% trans "Clear" %}</a>
+            {% endif %}
+        </form>
+        <div class="scope-toggle">
+            <span class="field-help">{% trans "Search in:" %}</span>
+            <a href="{{ back_url }}?scope=market{% if search %}&vq={{ search|urlencode }}{% endif %}"
+               class="btn btn-sm {% if scope != 'all' %}btn-primary{% else %}btn-secondary{% endif %}">
+                {% if market == 'local' %}{% trans "Local vendors" %}{% else %}{% trans "Foreign vendors" %}{% endif %}
+            </a>
+            <a href="{{ back_url }}?scope=all{% if search %}&vq={{ search|urlencode }}{% endif %}"
+               class="btn btn-sm {% if scope == 'all' %}btn-primary{% else %}btn-secondary{% endif %}">{% trans "All vendors" %}</a>
+        </div>
+    </div>
+
+    {% if search %}
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>{% trans "Supplier ID" %}</th>
+                    <th>{% trans "Vendor Name (Arabic)" %}</th>
+                    <th>{% trans "Vendor Name (English)" %}</th>
+                    <th>{% trans "Country" %}</th>
+                    <th>{% trans "Category" %}</th>
+                    <th>{% trans "Registration Status (new)" %}</th>
+                    <th>{% trans "E-mail" %}</th>
+                    <th class="col-actions"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidate in candidates %}
+                <tr>
+                    <td class="mono">{{ candidate.supplier_id }}</td>
+                    <td>{{ candidate.name_ar }}</td>
+                    <td>{{ candidate.name_en|default:"-" }}</td>
+                    <td>{{ candidate.country|default:"-" }}</td>
+                    <td>{{ candidate.category|default:"-" }}</td>
+                    <td>{{ candidate.registration_status_new|default:"-" }}</td>
+                    <td>{% if candidate.email %}<a href="mailto:{{ candidate.email }}" class="contact-link">{{ candidate.email }}</a>{% else %}-{% endif %}</td>
+                    <td class="col-actions">
+                        <form method="post" action="{% url 'operation_vendor_add' pk=operation.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="supplier_id" value="{{ candidate.supplier_id }}">
+                            <input type="hidden" name="next"
+                                   value="{{ back_url }}{% if search %}?vq={{ search|urlencode }}&scope={{ scope }}{% elif scope == 'all' %}?scope=all{% endif %}">
+                            <button type="submit" class="btn btn-sm btn-primary">{% trans "Add" %}</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="empty-state">{% trans "No vendors found." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="field-help">
+        {% if scope == 'all' %}
+        {% trans "Search for a vendor above to add it to this list." %}
+        {% elif market == 'local' %}
+        {% trans "Only local vendors are searched. Switch to all vendors above if you need another one." %}
+        {% else %}
+        {% trans "Only foreign vendors are searched. Switch to all vendors above if you need another one." %}
+        {% endif %}
+    </p>
+    {% endif %}
+</div>
+{% endwith %}

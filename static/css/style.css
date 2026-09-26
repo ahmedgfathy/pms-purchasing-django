@@ -1,20 +1,27 @@
 :root {
-    --chrome-dark: #3f3f3f;
-    --chrome-mid: #5a5a5a;
-    --chrome: #d6d3ce;
-    --chrome-light: #e8e6e2;
+    /* Chrome / window surfaces (cool-tinted) */
+    --chrome-dark: #31363f;
+    --chrome-mid: #565d6b;
+    --chrome: #dcdfe6;
+    --chrome-light: #eef0f4;
+    --chrome-fg: #4b5563;
     --white: #ffffff;
-    --panel: #f4f3f0;
-    --text: #000000;
-    --text-dim: #555555;
-    --border: #8a8a8a;
+    --panel: #f5f6f9;
+    --bg: #ffffff;
+    --text: #14161a;
+    --text-dim: #5b6472;
+    --border: #9aa2af;
     --highlight: #ffffff;
     --shadow: #000000;
-    --accent: #374151;
-    --accent-bright: #4b5563;
-    --accent-light: #9ca3af;
-    --accent-dark: #1f2937;
-    --accent-deep: #111827;
+
+    /* Blue accent series */
+    --accent: #1d4ed8;
+    --accent-bright: #3b82f6;
+    --accent-light: #93c5fd;
+    --accent-dark: #1e3a8a;
+    --accent-deep: #172554;
+    --accent-soft: #dbeafe;
+    --focus: #2563eb;
 }
 
 * {
@@ -28,6 +35,17 @@ body {
     margin: 0;
     font-size: 13px;
     line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Visible keyboard focus (accessibility) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
 }
 
 body.login-body {
@@ -85,6 +103,17 @@ a {
     color: var(--accent-light);
 }
 
+/* Brand text sits on the dark titlebar/topbar -> keep it high contrast */
+.titlebar .brand-name-ar,
+.topbar .brand-name-ar {
+    color: #ffffff;
+}
+
+.titlebar .brand-name-ar small,
+.topbar .brand-name-ar small {
+    color: #b7cdf5;
+}
+
 .window-body {
     padding: 16px;
 }
@@ -119,8 +148,21 @@ a {
     font-size: 13px;
     letter-spacing: 0.05em;
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.login-brand .brand-name-ar {
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.login-brand .brand-sub {
+    color: #b7cdf5;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
 }
 
 .login-brand img {
@@ -183,24 +225,68 @@ a {
 
 /* ---------- Buttons (3D bevel, blue series) ---------- */
 .btn {
-    background: var(--accent);
+    display: inline-block;
+    background: linear-gradient(to bottom, var(--accent-bright), var(--accent));
     color: #fff;
     border: 2px solid;
-    border-color: var(--accent-bright) var(--accent-deep) var(--accent-deep) var(--accent-bright);
+    border-color: var(--accent-light) var(--accent-deep) var(--accent-deep) var(--accent-light);
     padding: 6px 18px;
     font-family: inherit;
     font-size: 13px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: center;
+    text-decoration: none;
     cursor: pointer;
+    transition: filter 0.12s ease, background 0.12s ease;
+}
+
+.btn:hover {
+    filter: brightness(1.08);
 }
 
 .btn:active {
     background: var(--accent-dark);
-    border-color: var(--accent-deep) var(--accent-bright) var(--accent-bright) var(--accent-deep);
+    border-color: var(--accent-deep) var(--accent-light) var(--accent-light) var(--accent-deep);
+    transform: translateY(1px);
 }
 
 .btn:focus {
     outline: 1px dotted var(--accent-light);
     outline-offset: 1px;
+}
+
+.btn-primary {
+    background: linear-gradient(to bottom, var(--accent-bright), var(--accent));
+    color: #fff;
+    border-color: var(--accent-light) var(--accent-deep) var(--accent-deep) var(--accent-light);
+}
+
+/* Secondary actions (Cancel / Back) read as neutral chrome buttons */
+.btn-secondary {
+    background: linear-gradient(to bottom, var(--chrome-light), var(--chrome));
+    color: var(--text);
+    border-color: var(--highlight) var(--shadow) var(--shadow) var(--highlight);
+}
+
+.btn-secondary:hover {
+    filter: none;
+    background: #f6f7f9;
+}
+
+.btn-secondary:active {
+    background: var(--chrome);
+    border-color: var(--shadow) var(--highlight) var(--highlight) var(--shadow);
+    transform: translateY(1px);
+}
+
+.btn-secondary:focus {
+    outline: 1px dotted var(--accent);
+}
+
+.btn-sm {
+    padding: 4px 12px;
+    font-size: 12px;
 }
 
 u {
@@ -210,6 +296,7 @@ u {
 /* ---------- App shell (webapp) ---------- */
 .app {
     height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     background: var(--white);
@@ -223,6 +310,7 @@ u {
     color: #fff;
     padding: 9px 18px;
     border-bottom: 1px solid #000;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 .topbar .brand img {
@@ -395,7 +483,7 @@ u {
 }
 
 .notif-item.unread {
-    background: rgba(220, 38, 38, 0.08);
+    background: rgba(59, 130, 246, 0.09);
     border-inline-start: 3px solid var(--accent-bright);
 }
 
@@ -468,11 +556,29 @@ u {
 
 .sidebar {
     width: 230px;
-    background: var(--chrome);
+    background: linear-gradient(to bottom, #e9ecf2, var(--chrome));
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+}
+
+/* Slim, chrome-styled scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 12px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: var(--chrome-light);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #b9bfc9;
+    border: 2px solid var(--chrome-light);
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #9aa2af;
 }
 
 .brand-side {
@@ -502,17 +608,25 @@ u {
     color: var(--text);
     border-left: 3px solid transparent;
     font-size: 13px;
+    transition: background 0.12s ease, color 0.12s ease;
 }
 
 .side-nav .nav-item a:hover {
     background: var(--chrome-light);
+    color: var(--accent-dark);
 }
 
 .side-nav .nav-item.active a {
-    background: var(--white);
+    background: linear-gradient(to bottom, #ffffff, #f3f6fd);
     border-left-color: var(--accent);
     color: var(--accent-dark);
     font-weight: bold;
+    box-shadow: inset 0 1px 0 var(--highlight);
+}
+
+.side-nav .nav-item.active a:hover {
+    background: linear-gradient(to bottom, #ffffff, #eef3fd);
+    color: var(--accent-dark);
 }
 
 .content {
@@ -526,6 +640,10 @@ u {
     margin-bottom: 22px;
 }
 
+.page-header-text {
+    min-width: 0;
+}
+
 .page-header h1 {
     margin: 0;
     font-size: 20px;
@@ -534,6 +652,10 @@ u {
 
 .page-header .subtitle {
     color: var(--text-dim);
+    margin: 4px 0 0;
+}
+
+.page-header-text .subtitle {
     margin: 4px 0 0;
 }
 
@@ -557,7 +679,7 @@ u {
 .stat-card:hover {
     border-color: var(--accent-bright);
     transform: translateY(-2px);
-    box-shadow: 0 3px 10px rgba(69, 10, 10, 0.15);
+    box-shadow: 0 4px 12px rgba(29, 78, 216, 0.16);
 }
 
 .stat-top {
@@ -572,7 +694,7 @@ u {
     width: 24px;
     height: 24px;
     border-radius: 6px;
-    background: rgba(220, 38, 38, 0.12);
+    background: rgba(59, 130, 246, 0.15);
     color: var(--accent-dark);
     display: grid;
     place-items: center;
@@ -647,7 +769,7 @@ u {
 .flash {
     outline: 1px dotted var(--accent-bright);
     outline-offset: 2px;
-    background: rgba(220, 38, 38, 0.22);
+    background: rgba(59, 130, 246, 0.28);
     border-radius: 2px;
 }
 
@@ -659,7 +781,7 @@ u {
 .target-flash {
     outline: 2px dotted var(--accent-bright);
     outline-offset: 2px;
-    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.35);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.35);
 }
 /* ---------- Modules: toolbar, tables, forms ---------- */
 .toolbar-row {
@@ -743,14 +865,23 @@ u {
     max-width: 100%;
 }
 
+.filter-bar input[type="text"]:focus,
+.filter-bar select:focus {
+    outline: none;
+    border-color: var(--accent-bright);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
 .filter-bar button {
     padding: 7px 16px;
     border: 1px solid var(--border);
     border-radius: 6px;
-    background: var(--accent);
+    background: linear-gradient(to bottom, var(--accent-bright), var(--accent));
     color: #fff;
     font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
+    transition: filter 0.12s ease;
 }
 
 .filter-bar button:hover {
@@ -770,38 +901,55 @@ u {
 .sort-ind {
     color: var(--accent);
     font-size: 11px;
-    margin-left: 2px;
+    margin-inline-start: 2px;
 }
 
-.table {
+/* Horizontal scroll wrapper keeps wide tables inside the content area */
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    background: var(--white);
+}
+
+.table,
+.data-table {
     width: 100%;
     border-collapse: collapse;
     background: var(--white);
     font-size: 12px;
 }
 
-.table th {
-    background: var(--chrome);
+.table th,
+.data-table th {
+    background: linear-gradient(to bottom, #f1f3f7, var(--chrome));
     border: 1px solid var(--border);
     padding: 7px 10px;
     text-align: left;
+    color: var(--accent-deep);
+    font-weight: bold;
+    white-space: nowrap;
     box-shadow: inset 1px 1px 0 var(--highlight);
 }
 
-.table td {
+.table td,
+.data-table td {
     border: 1px solid var(--border);
     padding: 7px 10px;
 }
 
-.table tbody tr:nth-child(even) td {
+.table tbody tr:nth-child(even) td,
+.data-table tbody tr:nth-child(even) td {
     background: var(--panel);
 }
 
-.table tbody tr:hover td {
-    background: var(--chrome-light);
+.table tbody tr:hover td,
+.data-table tbody tr:hover td {
+    background: #eaf1fd;
 }
 
-.table .table-empty {
+.table .table-empty,
+.data-table .table-empty,
+td.empty-state {
     text-align: center;
     color: var(--text-dim);
     padding: 24px;
@@ -841,6 +989,22 @@ u {
 
 .btn.danger:active {
     background: #7f1d1d;
+}
+
+.btn-danger {
+    background: linear-gradient(to bottom, #ef4444, #b91c1c);
+    color: #fff;
+    border-color: #fca5a5 #7f1d1d #7f1d1d #fca5a5;
+}
+
+.btn-danger:hover {
+    filter: brightness(1.07);
+}
+
+.btn-danger:active {
+    background: #7f1d1d;
+    border-color: #7f1d1d #fca5a5 #fca5a5 #7f1d1d;
+    transform: translateY(1px);
 }
 
 .btn-ghost {
@@ -935,7 +1099,7 @@ u {
 
 .field-errors ul {
     margin: 0;
-    padding-left: 16px;
+    padding-inline-start: 16px;
 }
 
 .field-help {
@@ -999,6 +1163,20 @@ u {
 .panel h3 {
     margin: 0 0 12px;
     color: var(--accent-deep);
+}
+
+.panel .subtitle {
+    color: var(--text-dim);
+    margin: 4px 0 10px;
+}
+
+.panel .subtitle a {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+.panel .subtitle a:hover {
+    color: var(--accent-dark);
 }
 
 .report-grid {
@@ -1100,7 +1278,7 @@ table.data-clickable tbody tr {
 }
 
 .oscil-fill {
-    fill: rgba(220, 38, 38, 0.14);
+    fill: rgba(59, 130, 246, 0.16);
     stroke: none;
 }
 
@@ -1227,9 +1405,11 @@ table.data-clickable tbody tr {
 }
 
 .lang-btn.active {
-    background: var(--accent-bright);
-    border-color: #fff;
+    background: #ffffff;
+    color: var(--accent-dark);
+    border-color: #ffffff;
     font-weight: bold;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
 .lang-btn .flag {
@@ -1326,6 +1506,19 @@ table.data-clickable tbody tr {
     background: #ecfdf5;
     border-color: #86efac;
     color: #166534;
+}
+
+.message.info,
+.message.debug {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #1e40af;
+}
+
+.message.warning {
+    background: #fffbeb;
+    border-color: #fcd34d;
+    color: #92400e;
 }
 
 .message.error {
@@ -1467,6 +1660,7 @@ table.data-clickable tbody tr {
 .detail-card h3 {
     margin: 0 0 12px 0;
     font-size: 14px;
+    color: var(--accent-dark);
     padding-bottom: 8px;
     border-bottom: 1px solid var(--border);
 }
@@ -1492,6 +1686,7 @@ table.data-clickable tbody tr {
 
 .field-value {
     color: var(--text);
+    overflow-wrap: anywhere;
 }
 
 .mono {
@@ -1500,7 +1695,7 @@ table.data-clickable tbody tr {
 
 .empty-state {
     text-align: center;
-    color: #6b7280;
+    color: var(--text-dim);
     font-style: italic;
     padding: 20px !important;
 }
@@ -1566,34 +1761,33 @@ table.data-clickable tbody tr {
     padding: 4px;
 }
 
+.item-errors-row td {
+    background: #fef2f2;
+    border-top: 0;
+    padding: 4px 8px 6px;
+}
+
+.item-errors-row .field-errors {
+    margin-top: 0;
+}
+
+.errorlist {
+    margin: 4px 0 0;
+    padding-inline-start: 16px;
+    color: #b91c1c;
+    font-size: 11px;
+}
+
 .item-row .form-input {
     width: 100%;
     box-sizing: border-box;
 }
 
-/* ---------- RTL overrides ---------- */
-[dir="rtl"] .field-row {
-    flex-direction: row-reverse;
-}
-
+/* ---------- RTL overrides ----------
+   In RTL the natural flex order already reads right-to-left, so the first
+   child (page title, label, primary action) is placed at the start side. */
 [dir="rtl"] .field-label {
-    text-align: left;
-}
-
-[dir="rtl"] .filter-form {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .page-header {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .page-actions {
-    flex-direction: row-reverse;
-}
-
-[dir="rtl"] .form-actions {
-    flex-direction: row-reverse;
+    text-align: start;
 }
 
 
@@ -1639,4 +1833,379 @@ table.data-clickable tbody tr {
     font-size: 9px;
     font-weight: 600;
     color: var(--chrome-fg, #888);
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 900px) {
+    .app {
+        height: auto;
+        min-height: 100dvh;
+    }
+
+    .app-shell {
+        flex-direction: column;
+    }
+
+    .topbar {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 8px 12px;
+    }
+
+    /* Sidebar becomes a horizontal, scrollable tab bar */
+    .sidebar {
+        width: 100%;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .brand-side {
+        display: none;
+    }
+
+    .side-nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding: 0;
+        min-width: max-content;
+    }
+
+    .side-nav .nav-divider {
+        display: none;
+    }
+
+    .side-nav .nav-item a {
+        padding: 11px 14px;
+        white-space: nowrap;
+        border-left: 0;
+        border-bottom: 3px solid transparent;
+    }
+
+    .side-nav .nav-item.active a,
+    .side-nav .nav-item.active a:hover {
+        border-left: 0;
+        border-bottom-color: var(--accent);
+        box-shadow: none;
+    }
+
+    [dir="rtl"] .side-nav .nav-item a {
+        border-right: 0;
+        border-bottom: 3px solid transparent;
+    }
+
+    [dir="rtl"] .side-nav .nav-item.active a {
+        border-right: 0;
+        border-bottom-color: var(--accent);
+    }
+
+    .content {
+        padding: 16px;
+    }
+
+    .login-window {
+        width: min(440px, 100%);
+    }
+
+    .form-grid,
+    .rfq-form .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .app-footer {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+}
+
+/* ---------- Accessibility: reduce motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* ---------- Pagination (vendor list / vendor register) ---------- */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+.page-btn {
+    display: inline-block;
+    background: linear-gradient(to bottom, #fff, var(--chrome));
+    color: var(--text);
+    border: 2px solid;
+    border-color: var(--highlight) var(--shadow) var(--shadow) var(--highlight);
+    padding: 4px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+}
+.page-btn:hover {
+    background: var(--accent-soft);
+}
+.page-current {
+    background: linear-gradient(to bottom, var(--accent-bright), var(--accent));
+    color: #fff;
+    border: 1px solid var(--accent-deep);
+    padding: 3px 12px;
+    font-size: 12px;
+    font-weight: 700;
+}
+.page-info {
+    color: var(--text-dim);
+    font-size: 12px;
+}
+
+/* ---------- Checkboxes (Win95 look) ---------- */
+.form-check {
+    accent-color: var(--accent);
+    width: 15px;
+    height: 15px;
+    vertical-align: -3px;
+    cursor: pointer;
+}
+.check-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+    color: var(--text);
+    cursor: pointer;
+}
+
+/* ---------- Row action forms inside tables ---------- */
+.col-actions form {
+    display: inline;
+    margin: 0;
+}
+.col-actions button {
+    white-space: nowrap;
+}
+
+/* ---------- Section heading above a card group ---------- */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 26px 0 4px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* ---------- Market scope toggle (vendor search) ---------- */
+.scope-toggle {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.scope-toggle .field-help {
+    margin: 0;
+}
+
+
+
+/* ---------- Dashboard: SVG donuts + CSS bars (no JS, no CDN) ---------- */
+a.stat-card {
+    display: block;
+    color: inherit;
+}
+
+.stat-card .stat-tag {
+    display: block;
+    margin-top: 6px;
+    margin-inline-start: 0;
+    font-family: "MS Sans Serif", "Segoe UI", Tahoma, sans-serif;
+    white-space: normal;
+}
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.chart-grid > .panel {
+    margin-bottom: 0;
+}
+
+.chart-panel .panel-head {
+    margin-bottom: 12px;
+}
+
+.chart-body {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.donut {
+    width: 152px;
+    height: 152px;
+    flex: 0 0 152px;
+}
+
+.legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    font-size: 12px;
+}
+
+.legend li {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.legend-dot {
+    width: 11px;
+    height: 11px;
+    flex: 0 0 11px;
+    border: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+.legend-label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.legend-value {
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.legend-pct {
+    color: var(--text-dim);
+    font-weight: normal;
+}
+
+.chart-foot {
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+    font-size: 11px;
+    color: var(--text-dim);
+}
+
+.chart-empty {
+    margin: 0;
+    padding: 14px 0 6px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 12px;
+}
+
+.chart-empty .btn {
+    margin-top: 8px;
+}
+
+.bar-row {
+    display: grid;
+    grid-template-columns: minmax(80px, 34%) 1fr auto;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+    font-size: 12px;
+}
+
+.bar-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bar-track {
+    height: 14px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.bar-fill {
+    display: block;
+    height: 100%;
+    background: var(--accent-bright);
+    border-inline-end: 2px solid var(--accent-deep);
+}
+
+.bar-value {
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    white-space: nowrap;
+    color: var(--accent-dark);
+}
+
+.chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.summary-table td.num,
+.summary-table th.num {
+    text-align: end;
+    font-family: "Courier New", monospace;
+    font-weight: bold;
+    width: 110px;
+}
+
+.summary-table td a {
+    color: var(--accent);
+    text-decoration: underline;
+}
+
+.summary-table td a:hover {
+    color: var(--accent-dark);
+}
+
+/* ---------- Vendor contact links (e-mail / website) ---------- */
+.contact-link {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--accent);
+    text-decoration: underline;
+    /* addresses stay left-to-right inside the AR (RTL) screens too */
+    direction: ltr;
+    unicode-bidi: plaintext;
+}
+
+.contact-link:hover {
+    color: var(--accent-dark);
+}
+
+td .contact-link {
+    font-family: monospace;
+    font-size: 12px;
 }

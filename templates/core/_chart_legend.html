@@ -1,0 +1,11 @@
+{# Legend of one donut chart — expects `chart` with slices               #}
+{# (label / value / pct / color). Used by dashboard.html (twice).        #}
+<ul class="legend">
+    {% for piece in chart.slices %}
+    <li>
+        <span class="legend-dot" style="background: {{ piece.color }}"></span>
+        <span class="legend-label">{{ piece.label }}</span>
+        <span class="legend-value">{{ piece.value }} <span class="legend-pct">{{ piece.pct }}%</span></span>
+    </li>
+    {% endfor %}
+</ul>

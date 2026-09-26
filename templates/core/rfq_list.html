@@ -1,68 +1,58 @@
 {% extends "core/base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "RFQs" %} - PMS Purchasing{% endblock %}
+{% block title %}{{ market_label }} - PMS Purchasing{% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <h1>{% trans "RFQs" %}</h1>
-    <a href="{% url 'rfq_create' %}" class="btn btn-primary">{% trans "New RFQ" %}</a>
+    <div class="page-header-text">
+        <h1>{{ market_label }}</h1>
+        <p class="field-help">
+            {% blocktrans with ops=total_operations vendors=total_vendors links=total_links %}{{ ops }} operations &middot; {{ vendors }} vendors &middot; {{ links }} registrations{% endblocktrans %}
+        </p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'rfq_create' %}{% if market %}?market={{ market }}{% endif %}" class="btn btn-primary">{% trans "New RFQ" %}</a>
+    </div>
 </div>
 
-<div class="filter-bar">
-    <form method="get" class="filter-form">
-        <input type="text" name="q" value="{{ current_search }}" class="form-input" placeholder="{% trans "Search by request number..." %}">
-        <select name="status" class="form-input">
-            <option value="">{% trans "All Statuses" %}</option>
-            {% for value, label in status_choices %}
-            <option value="{{ value }}" {% if current_status == value %}selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-        </select>
-        <select name="market" class="form-input">
-            <option value="">{% trans "All Markets" %}</option>
-            {% for value, label in market_choices %}
-            <option value="{{ value }}" {% if current_market == value %}selected{% endif %}>{{ label }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit" class="btn btn-sm">{% trans "Filter" %}</button>
-        {% if current_search or current_status or current_market %}
-        <a href="{% url 'rfq_list' %}" class="btn btn-sm btn-secondary">{% trans "Clear" %}</a>
-        {% endif %}
-    </form>
+{% if orphan_rfqs %}
+<div class="detail-card" style="margin-bottom:1rem;">
+    <h3>{% trans "RFQs without a tender" %} ({{ orphan_rfqs|length }})</h3>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>{% trans "Mat. Req. No" %}</th>
+                    <th>{% trans "Date" %}</th>
+                    <th>{% trans "Department" %}</th>
+                    <th>{% trans "Project" %}</th>
+                    <th>{% trans "Market" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Items" %}</th>
+                    <th class="col-actions"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rfq in orphan_rfqs %}
+                <tr data-href="{% url 'rfq_detail' pk=rfq.pk %}" class="data-clickable">
+                    <td><strong>{{ rfq.request_number }}</strong></td>
+                    <td>{{ rfq.preparation_date }}</td>
+                    <td>{{ rfq.requesting_department.name }}</td>
+                    <td>{{ rfq.project|default:"-" }}</td>
+                    <td>{{ rfq.get_market_type_display }}</td>
+                    <td><span class="status-badge status-{{ rfq.status }}">{{ rfq.get_status_display }}</span></td>
+                    <td>{{ rfq.total_items }}</td>
+                    <td class="col-actions">
+                        <a href="{% url 'rfq_detail' pk=rfq.pk %}" class="btn btn-sm">{% trans "Open" %}</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
+{% endif %}
 
-<div class="table-wrap">
-    <table class="data-table">
-        <thead>
-            <tr>
-                <th>{% trans "Mat. Req. No" %}</th>
-                <th>{% trans "Department" %}</th>
-                <th>{% trans "Date" %}</th>
-                <th>{% trans "Market" %}</th>
-                <th>{% trans "Method" %}</th>
-                <th>{% trans "Status" %}</th>
-                <th>{% trans "Items" %}</th>
-                <th>{% trans "Est. Value" %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for rfq in rfqs %}
-            <tr data-href="{% url 'rfq_detail' pk=rfq.pk %}" class="data-clickable">
-                <td><strong>{{ rfq.request_number }}</strong></td>
-                <td>{{ rfq.requesting_department.name }}</td>
-                <td>{{ rfq.preparation_date }}</td>
-                <td>{{ rfq.get_market_type_display }}</td>
-                <td>{{ rfq.get_purchase_method_display }}</td>
-                <td><span class="status-badge status-{{ rfq.status }}">{{ rfq.get_status_display }}</span></td>
-                <td>{{ rfq.total_items }}</td>
-                <td class="mono">{{ rfq.estimated_value|floatformat:2 }} EGP</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="8" class="empty-state">{% trans "No RFQs found." %}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+{% include "core/_tender_list_table.html" %}
 {% endblock %}

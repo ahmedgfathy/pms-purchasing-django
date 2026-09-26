@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2">
 </head>
 <body class="login-body">
     <div class="window login-window">
@@ -46,8 +46,8 @@
         </div>
         <div class="window-body">
             <div class="login-brand">
-                <span class="brand-name-ar" style="font-size:20px">{% if LANGUAGE_CODE == 'en' %}<b>P</b>MS PURCHASING{% else %}ادارة المشتريات{% endif %}</span>
-                <br><small style="color:#888;font-size:11px">خدمات البترول البحرية</small>
+                <span class="brand-name-ar">{% if LANGUAGE_CODE == 'en' %}<b>P</b>MS PURCHASING{% else %}ادارة المشتريات{% endif %}</span>
+                <small class="brand-sub">خدمات البترول البحرية</small>
             </div>
 
             {% if form.errors %}
@@ -72,14 +72,14 @@
                     </tr>
                 </table>
                 <div class="login-actions">
-                    <button type="reset" class="btn" id="btn-reset" data-accel="r" data-target="#btn-reset">{% if LANGUAGE_CODE == 'en' %}<u>R</u>eset{% else %}{% trans "Reset" %}{% endif %}</button>
+                    <button type="reset" class="btn btn-secondary" id="btn-reset" data-accel="r" data-target="#btn-reset">{% if LANGUAGE_CODE == 'en' %}<u>R</u>eset{% else %}{% trans "Reset" %}{% endif %}</button>
                     <button type="submit" class="btn" id="btn-signin" data-accel="i" data-target="#btn-signin">{% if LANGUAGE_CODE == 'en' %}S<u>i</u>gn In{% else %}{% trans "Sign In" %}{% endif %}</button>
                 </div>
             </form>
         </div>
         <div class="statusbar">
             <span>{% trans "Ready" %}</span>
-            <span class="status-right">PMS@localhost:3306</span>
+            <span class="status-right">PMS@localhost</span>
         </div>
     </div>
     <script src="{% static 'js/app.js' %}?v=1"></script>

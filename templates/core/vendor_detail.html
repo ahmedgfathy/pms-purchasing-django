@@ -1,0 +1,399 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+{% load contacts %}
+
+{% block title %}{{ vendor.name_ar }} - PMS Purchasing{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-text">
+        <h1>{{ vendor.name_ar }}</h1>
+        <p class="field-help">
+            {% trans "Supplier ID" %}: <span class="mono">{{ vendor.supplier_id }}</span>
+            {% if vendor.name_en %} &middot; {{ vendor.name_en }}{% endif %}
+            {% if vendor.country %} &middot; {{ vendor.country }}{% endif %}
+        </p>
+    </div>
+    <div class="page-actions">
+        <a href="{% url 'vendor_edit' pk=vendor.pk %}" class="btn btn-primary">{% trans "Edit" %}</a>
+        <a href="{% url 'vendor_register' %}" class="btn btn-secondary">{% trans "Back to Register" %}</a>
+    </div>
+</div>
+
+<div class="detail-grid">
+    <div class="detail-card">
+        <h3>{% trans "Identification" %}</h3>
+        <div class="detail-fields">
+            <div class="field-row">
+                <span class="field-label">{% trans "Supplier ID" %}:</span>
+                <span class="field-value mono">{{ vendor.supplier_id }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Vendor Name (Arabic)" %}:</span>
+                <span class="field-value">{{ vendor.name_ar }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Vendor Name (English)" %}:</span>
+                <span class="field-value">{{ vendor.name_en|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Booklet No" %}:</span>
+                <span class="field-value mono">{{ vendor.booklet_no|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Booklet Type" %}:</span>
+                <span class="field-value">{{ vendor.get_booklet_type_display|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Category" %}:</span>
+                <span class="field-value">{{ vendor.category|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "SAP No." %}:</span>
+                <span class="field-value mono">{{ vendor.sab_no|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Country" %}:</span>
+                <span class="field-value">{{ vendor.country|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Address" %}:</span>
+                <span class="field-value">{{ vendor.address|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Website" %}:</span>
+                <span class="field-value">
+                    {% with url=vendor.website|website_url %}
+                    {% if url %}<a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="contact-link">{{ url }}</a>{% else %}-{% endif %}
+                    {% endwith %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <h3>{% trans "Contacts" %}</h3>
+        <div class="detail-fields">
+            <div class="field-row">
+                <span class="field-label">{% trans "Phone 1" %}:</span>
+                <span class="field-value mono">{{ vendor.phone1|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Phone 2" %}:</span>
+                <span class="field-value mono">{{ vendor.phone2|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Phone 3" %}:</span>
+                <span class="field-value mono">{{ vendor.phone3|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Mobile 1" %}:</span>
+                <span class="field-value mono">{{ vendor.mobile1|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Mobile 2" %}:</span>
+                <span class="field-value mono">{{ vendor.mobile2|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Mobile 3" %}:</span>
+                <span class="field-value mono">{{ vendor.mobile3|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Fax 1" %}:</span>
+                <span class="field-value mono">{{ vendor.fax1|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Fax 2" %}:</span>
+                <span class="field-value mono">{{ vendor.fax2|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "E-mail 1" %}:</span>
+                <span class="field-value">
+                    {% for addr in vendor.email1|emails %}<a href="mailto:{{ addr }}" class="contact-link">{{ addr }}</a>{% if not forloop.last %}<br>{% endif %}{% empty %}-{% endfor %}
+                </span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "E-mail 2" %}:</span>
+                <span class="field-value">
+                    {% for addr in vendor.email2|emails %}<a href="mailto:{{ addr }}" class="contact-link">{{ addr }}</a>{% if not forloop.last %}<br>{% endif %}{% empty %}-{% endfor %}
+                </span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "E-mail 3" %}:</span>
+                <span class="field-value">
+                    {% for addr in vendor.email3|emails %}<a href="mailto:{{ addr }}" class="contact-link">{{ addr }}</a>{% if not forloop.last %}<br>{% endif %}{% empty %}-{% endfor %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <h3>{% trans "Agent" %}</h3>
+        <div class="detail-fields">
+            <div class="field-row">
+                <span class="field-label">{% trans "Agent" %}:</span>
+                <span class="field-value">{{ vendor.agent|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Agent Address" %}:</span>
+                <span class="field-value">{{ vendor.agent_address|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Agent Phone 1" %}:</span>
+                <span class="field-value mono">{{ vendor.agent_phone1|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Agent Mobile 1" %}:</span>
+                <span class="field-value mono">{{ vendor.agent_mobile1|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Agent Fax 1" %}:</span>
+                <span class="field-value mono">{{ vendor.agent_fax1|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Agent E-mail 1" %}:</span>
+                <span class="field-value">
+                    {% for addr in vendor.agent_email1|emails %}<a href="mailto:{{ addr }}" class="contact-link">{{ addr }}</a>{% if not forloop.last %}<br>{% endif %}{% empty %}-{% endfor %}
+                </span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Agent E-mail 2" %}:</span>
+                <span class="field-value">
+                    {% for addr in vendor.agent_email2|emails %}<a href="mailto:{{ addr }}" class="contact-link">{{ addr }}</a>{% if not forloop.last %}<br>{% endif %}{% empty %}-{% endfor %}
+                </span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Agent E-mail 3" %}:</span>
+                <span class="field-value">
+                    {% for addr in vendor.agent_email3|emails %}<a href="mailto:{{ addr }}" class="contact-link">{{ addr }}</a>{% if not forloop.last %}<br>{% endif %}{% empty %}-{% endfor %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <h3>{% trans "Registration" %}</h3>
+        <div class="detail-fields">
+            <div class="field-row">
+                <span class="field-label">{% trans "Registration Status (new)" %}:</span>
+                <span class="field-value">{{ vendor.registration_status_new|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Registration Status" %}:</span>
+                <span class="field-value">{{ vendor.registration_status|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Committee No" %}:</span>
+                <span class="field-value mono">{{ vendor.committee_no|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Committee Date" %}:</span>
+                <span class="field-value">{{ vendor.committee_date|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Data Registered By" %}:</span>
+                <span class="field-value">{{ vendor.data_registered|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "A Certified" %}:</span>
+                <span class="field-value">{{ vendor.certified|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Capital Amount" %}:</span>
+                <span class="field-value mono">{{ vendor.capital_amount|default:"-" }} {{ vendor.capital_currency }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Flags" %}:</span>
+                <span class="field-value">
+                    {% if vendor.is_local_registered %}<span class="badge badge-blue">{% trans "Registered locally" %}</span>{% endif %}
+                    {% if vendor.is_foreign_registered %}<span class="badge badge-purple">{% trans "Registered abroad" %}</span>{% endif %}
+                    {% if vendor.is_suspended %}<span class="badge badge-amber">{% trans "Suspended" %}</span>{% endif %}
+                    {% if vendor.is_cancelled %}<span class="badge badge-red">{% trans "Cancelled" %}</span>{% endif %}
+                    {% if vendor.is_flagged %}<span class="badge badge-gray">{% trans "Flagged" %}</span>{% endif %}
+                    {% if not vendor.is_local_registered and not vendor.is_foreign_registered and not vendor.is_suspended and not vendor.is_cancelled and not vendor.is_flagged %}-{% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <h3>{% trans "Documents" %}</h3>
+        <div class="detail-fields">
+            <div class="field-row">
+                <span class="field-label">{% trans "Commercial Register" %}:</span>
+                <span class="field-value mono">{{ vendor.commercial_register|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Commercial Register Expiry" %}:</span>
+                <span class="field-value">{{ vendor.commercial_register_expiry|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Tax Card" %}:</span>
+                <span class="field-value mono">{{ vendor.tax_card|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Tax Card Expiry" %}:</span>
+                <span class="field-value">{{ vendor.tax_card_expiry|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "VAT Registration" %}:</span>
+                <span class="field-value mono">{{ vendor.vat_registration|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "VAT Expiry" %}:</span>
+                <span class="field-value">{{ vendor.vat_expiry|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Contact Person" %}:</span>
+                <span class="field-value">{{ vendor.contact_person|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Owner Name" %}:</span>
+                <span class="field-value">{{ vendor.owner_name|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Free Zone" %}:</span>
+                <span class="field-value">{{ vendor.free_zone|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Agency Documents" %}:</span>
+                <span class="field-value">{{ vendor.agency_documents|default:"-" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <h3>{% trans "Notes" %}</h3>
+        <div class="detail-fields">
+            <div class="field-row">
+                <span class="field-label">{% trans "Notes" %}:</span>
+                <span class="field-value">{{ vendor.notes|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Notes 2" %}:</span>
+                <span class="field-value">{{ vendor.notes2|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "Special Notes" %}:</span>
+                <span class="field-value">{{ vendor.special_notes|default:"-" }}</span>
+            </div>
+            <div class="field-row">
+                <span class="field-label">{% trans "CD Vendor" %}:</span>
+                <span class="field-value">{{ vendor.cd_vendor|default:"-" }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="detail-card" style="margin-top:1rem;">
+    <h3>{% trans "Activity Registrations" %} ({{ activity_count }})</h3>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>{% trans "Sub Activity Code" %}</th>
+                    <th>{% trans "Main Activity" %}</th>
+                    <th>{% trans "Sub Activity" %}</th>
+                    <th>{% trans "Registration Type" %}</th>
+                    <th>{% trans "Registration Capacity" %}</th>
+                    <th>{% trans "Brand" %}</th>
+                    <th>{% trans "Original Factory" %}</th>
+                    <th>{% trans "Origin Country" %}</th>
+                    <th>{% trans "Notes" %}</th>
+                    <th class="col-actions"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity in activities %}
+                <tr>
+                    <td class="mono">{{ activity.sub_activity_id }}</td>
+                    <td>{{ activity.sub_activity.main_activity }}</td>
+                    <td>{{ activity.sub_activity }}</td>
+                    <td>{{ activity.registration_type|default:"-" }}</td>
+                    <td>{{ activity.capacity|default:"-" }}</td>
+                    <td>{{ activity.brand|default:"-" }}</td>
+                    <td>{{ activity.original_factory|default:"-" }}</td>
+                    <td>{{ activity.origin_country|default:"-" }}</td>
+                    <td>{{ activity.notes|default:"-" }}</td>
+                    <td class="col-actions">
+                        <form method="post" action="{% url 'vendor_activity_remove' pk=vendor.pk activity_pk=activity.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">{% trans "Remove" %}</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" class="empty-state">{% trans "This vendor is not registered on any activity." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <form method="post" action="{% url 'vendor_activity_add' pk=vendor.pk %}" class="filter-form" style="margin-top:.75rem;">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label>{% trans "Sub Activity" %} *</label>
+                {{ activity_form.sub_activity }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Registration Type" %}</label>
+                {{ activity_form.registration_type }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Registration Capacity" %}</label>
+                {{ activity_form.capacity }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Brand" %}</label>
+                {{ activity_form.brand }}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-sm btn-primary">{% trans "Register on Activity" %}</button>
+    </form>
+</div>
+
+<div class="detail-card" style="margin-top:1rem;">
+    <h3>{% trans "Operations" %} ({{ operation_count }})</h3>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>{% trans "Operation No" %}</th>
+                    <th>{% trans "Year" %}</th>
+                    <th>{% trans "Task Statement" %}</th>
+                    <th>{% trans "Bid Status" %}</th>
+                    <th>{% trans "Technical Study" %}</th>
+                    <th>{% trans "PO Issuance Status" %}</th>
+                    <th>{% trans "Notes" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for link in operations %}
+                <tr>
+                    <td class="mono">
+                        {% if link.operation %}
+                        <a href="{% url 'operation_detail' pk=link.operation_id %}">{{ link.operation_no|default:link.operation.operation_no }}</a>
+                        {% else %}
+                        {{ link.operation_no|default:"-" }}
+                        {% endif %}
+                    </td>
+                    <td class="mono">{% if link.year %}{{ link.year }}{% elif link.operation %}{{ link.operation.year }}{% else %}-{% endif %}</td>
+                    <td>{% if link.operation %}{{ link.operation.task_statement|truncatechars:70 }}{% else %}-{% endif %}</td>
+                    <td>{{ link.bid_status|default:"-" }}</td>
+                    <td>{{ link.technical_study|default:"-" }}</td>
+                    <td>{{ link.po_issuance_status|default:"-" }}</td>
+                    <td>{{ link.notes|default:"-" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty-state">{% trans "This vendor is not on any operation vendor list." %}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

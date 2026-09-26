@@ -1,0 +1,329 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }} - PMS Purchasing{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-text">
+        <h1>{{ title }}</h1>
+        {% if vendor %}
+        <p class="field-help">{% trans "Supplier ID" %}: <span class="mono">{{ vendor.supplier_id }}</span></p>
+        {% endif %}
+    </div>
+    <div class="page-actions">
+        {% if action == "edit" %}
+        <a href="{% url 'vendor_detail' pk=vendor.pk %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+        {% else %}
+        <a href="{% url 'vendor_register' %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+        {% endif %}
+    </div>
+</div>
+
+<form method="post" class="vendor-form">
+    {% csrf_token %}
+
+    {% if form.errors %}
+    <div class="form-errors">
+        {% for field in form.visible_fields %}
+        {% if field.errors %}
+        <div class="error-msg"><strong>{{ field.label }}:</strong> {{ field.errors.0 }}</div>
+        {% endif %}
+        {% endfor %}
+        {% if form.non_field_errors %}
+        <div class="error-msg">{{ form.non_field_errors.0 }}</div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="detail-grid">
+        <div class="detail-card">
+            <h3>{% trans "Identification" %}</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>{% trans "Vendor Name (Arabic)" %} *</label>
+                    {{ form.name_ar }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Vendor Name (English)" %}</label>
+                    {{ form.name_en }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Booklet No" %}</label>
+                    {{ form.booklet_no }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Booklet Type" %}</label>
+                    {{ form.booklet_type }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Category" %}</label>
+                    {{ form.category }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "SAP No." %}</label>
+                    {{ form.sab_no }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Country" %}</label>
+                    {{ form.country }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Website" %}</label>
+                    {{ form.website }}
+                </div>
+                <div class="form-group form-group-full">
+                    <label>{% trans "Address" %}</label>
+                    {{ form.address }}
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <h3>{% trans "Contacts" %}</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>{% trans "Phone 1" %}</label>
+                    {{ form.phone1 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Phone 2" %}</label>
+                    {{ form.phone2 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Phone 3" %}</label>
+                    {{ form.phone3 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Mobile 1" %}</label>
+                    {{ form.mobile1 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Mobile 2" %}</label>
+                    {{ form.mobile2 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Mobile 3" %}</label>
+                    {{ form.mobile3 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Fax 1" %}</label>
+                    {{ form.fax1 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Fax 2" %}</label>
+                    {{ form.fax2 }}
+                </div>
+                <div class="form-group form-group-full">
+                    <label>{% trans "E-mail 1" %}</label>
+                    {{ form.email1 }}
+                </div>
+                <div class="form-group form-group-full">
+                    <label>{% trans "E-mail 2" %}</label>
+                    {{ form.email2 }}
+                </div>
+                <div class="form-group form-group-full">
+                    <label>{% trans "E-mail 3" %}</label>
+                    {{ form.email3 }}
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <h3>{% trans "Agent" %}</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>{% trans "Agent" %}</label>
+                    {{ form.agent }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Agent Address" %}</label>
+                    {{ form.agent_address }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Agent Phone 1" %}</label>
+                    {{ form.agent_phone1 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Agent Phone 2" %}</label>
+                    {{ form.agent_phone2 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Agent Phone 3" %}</label>
+                    {{ form.agent_phone3 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Agent Mobile 1" %}</label>
+                    {{ form.agent_mobile1 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Agent Mobile 2" %}</label>
+                    {{ form.agent_mobile2 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Agent Mobile 3" %}</label>
+                    {{ form.agent_mobile3 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Agent Fax 1" %}</label>
+                    {{ form.agent_fax1 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Agent Fax 2" %}</label>
+                    {{ form.agent_fax2 }}
+                </div>
+                <div class="form-group">
+                    <label>{% trans "Agent Fax 3" %}</label>
+                    {{ form.agent_fax3 }}
+                </div>
+                <div class="form-group form-group-full">
+                    <label>{% trans "Agent E-mail 1" %}</label>
+                    {{ form.agent_email1 }}
+                </div>
+                <div class="form-group form-group-full">
+                    <label>{% trans "Agent E-mail 2" %}</label>
+                    {{ form.agent_email2 }}
+                </div>
+                <div class="form-group form-group-full">
+                    <label>{% trans "Agent E-mail 3" %}</label>
+                    {{ form.agent_email3 }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card" style="margin-top:1rem;">
+        <h3>{% trans "Registration" %}</h3>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>{% trans "Registration Status" %}</label>
+                {{ form.registration_status }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Registration Status (new)" %}</label>
+                {{ form.registration_status_new }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Committee No" %}</label>
+                {{ form.committee_no }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Committee Date" %}</label>
+                {{ form.committee_date }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Data Registered By" %}</label>
+                {{ form.data_registered }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "A Certified" %}</label>
+                {{ form.certified }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Capital Amount" %}</label>
+                {{ form.capital_amount }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Capital Currency" %}</label>
+                {{ form.capital_currency }}
+            </div>
+            <div class="form-group">
+                <label class="check-label">{{ form.is_local_registered }} {% trans "Registered locally" %}</label>
+            </div>
+            <div class="form-group">
+                <label class="check-label">{{ form.is_foreign_registered }} {% trans "Registered abroad" %}</label>
+            </div>
+            <div class="form-group">
+                <label class="check-label">{{ form.is_suspended }} {% trans "Suspended" %}</label>
+            </div>
+            <div class="form-group">
+                <label class="check-label">{{ form.is_cancelled }} {% trans "Cancelled" %}</label>
+            </div>
+            <div class="form-group">
+                <label class="check-label">{{ form.is_flagged }} {% trans "Flagged" %}</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card" style="margin-top:1rem;">
+        <h3>{% trans "Documents" %}</h3>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>{% trans "Commercial Register" %}</label>
+                {{ form.commercial_register }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Commercial Register Expiry" %}</label>
+                {{ form.commercial_register_expiry }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Tax Card" %}</label>
+                {{ form.tax_card }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Tax Card Expiry" %}</label>
+                {{ form.tax_card_expiry }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "VAT Registration" %}</label>
+                {{ form.vat_registration }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "VAT Expiry" %}</label>
+                {{ form.vat_expiry }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Contact Person" %}</label>
+                {{ form.contact_person }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Owner Name" %}</label>
+                {{ form.owner_name }}
+            </div>
+            <div class="form-group">
+                <label>{% trans "Free Zone" %}</label>
+                {{ form.free_zone }}
+            </div>
+            <div class="form-group form-group-full">
+                <label>{% trans "Agency Documents" %}</label>
+                {{ form.agency_documents }}
+            </div>
+            <div class="form-group form-group-full">
+                <label>{% trans "CD Vendor" %}</label>
+                {{ form.cd_vendor }}
+            </div>
+            <div class="form-group form-group-full">
+                <label>{% trans "Committee File" %}</label>
+                {{ form.committee_file }}
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card" style="margin-top:1rem;">
+        <h3>{% trans "Notes" %}</h3>
+        <div class="form-grid">
+            <div class="form-group form-group-full">
+                <label>{% trans "Notes" %}</label>
+                {{ form.notes }}
+            </div>
+            <div class="form-group form-group-full">
+                <label>{% trans "Notes 2" %}</label>
+                {{ form.notes2 }}
+            </div>
+            <div class="form-group form-group-full">
+                <label>{% trans "Special Notes" %}</label>
+                {{ form.special_notes }}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+        {% if action == "edit" %}
+        <a href="{% url 'vendor_detail' pk=vendor.pk %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+        {% else %}
+        <a href="{% url 'vendor_register' %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+        {% endif %}
+    </div>
+</form>
+{% endblock %}

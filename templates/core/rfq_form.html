@@ -20,8 +20,21 @@
 
     {% if form.errors %}
     <div class="form-errors">
-        {% for field, errors in form.errors.items %}
-        <div class="error-msg"><strong>{{ field }}:</strong> {{ errors.0 }}</div>
+        {% for field in form.visible_fields %}
+        {% if field.errors %}
+        <div class="error-msg"><strong>{{ field.label }}:</strong> {{ field.errors.0 }}</div>
+        {% endif %}
+        {% endfor %}
+        {% if form.non_field_errors %}
+        <div class="error-msg">{{ form.non_field_errors.0 }}</div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if formset.non_form_errors %}
+    <div class="form-errors">
+        {% for error in formset.non_form_errors %}
+        <div class="error-msg">{{ error }}</div>
         {% endfor %}
     </div>
     {% endif %}
@@ -154,6 +167,17 @@
                     {% for hidden in item_form.hidden_fields %}
                     {{ hidden }}
                     {% endfor %}
+                    {% if item_form.errors %}
+                    <tr class="item-errors-row">
+                        <td colspan="8">
+                            <div class="field-errors">
+                                {% for f in item_form.visible_fields %}
+                                {% if f.errors %}<div>{{ f.label }}: {{ f.errors.0 }}</div>{% endif %}
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endif %}
                     {% endfor %}
                 </tbody>
             </table>
@@ -203,7 +227,8 @@
     var totalForms = document.getElementById('id_items-TOTAL_FORMS');
     var container = document.querySelector('#items-table tbody');
     var addBtn = document.getElementById('add-item-row');
-    var emptyRow = container.querySelector('.item-row:last-child').cloneNode(true);
+    var rows = container.querySelectorAll('.item-row');
+    var emptyRow = rows[rows.length - 1].cloneNode(true);
 
     addBtn.addEventListener('click', function() {
         var idx = parseInt(totalForms.value);

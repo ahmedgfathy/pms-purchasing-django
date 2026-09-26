@@ -1,0 +1,116 @@
+{% load i18n %}
+{# Filter bar + the tender table + pagination.                       #}
+{# The local/foreign split lives on the sidebar, not on buttons here. #}
+{# Expects the _tender_list context: page_obj, operations,            #}
+{# query_string, market, *_choices, search/current_*.                 #}
+<div class="filter-bar">
+    <form method="get" class="filter-form">
+        <input type="text" name="q" value="{{ search }}" class="form-input"
+               placeholder="{% trans "Search operation no, task, entity..." %}">
+        <select name="year" class="form-input">
+            <option value="">{% trans "All Years" %}</option>
+            {% for value in year_choices %}
+            <option value="{{ value }}" {% if current_year == value %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+        <select name="status" class="form-input">
+            <option value="">{% trans "All Statuses" %}</option>
+            {% for value in status_choices %}
+            <option value="{{ value }}" {% if current_status == value %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+        <select name="dept" class="form-input">
+            <option value="">{% trans "All File Departments" %}</option>
+            {% for value in dept_choices %}
+            <option value="{{ value }}" {% if current_dept == value %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+        <select name="region" class="form-input">
+            <option value="">{% trans "All Regions" %}</option>
+            {% for value in region_choices %}
+            <option value="{{ value }}" {% if current_region == value %}selected{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-sm">{% trans "Filter" %}</button>
+        {% if search or current_year or current_status or current_dept or current_region %}
+        <a href="{{ request.path }}" class="btn btn-sm btn-secondary">{% trans "Clear" %}</a>
+        {% endif %}
+    </form>
+</div>
+
+<div class="table-wrap">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>{% trans "Operation No" %}</th>
+                <th>{% trans "Mat. Req. No" %}</th>
+                <th>{% trans "Task Statement" %}</th>
+                <th>{% trans "Requesting Entity" %}</th>
+                <th>{% trans "Project Code" %}</th>
+                <th>{% trans "Year" %}</th>
+                <th>{% trans "Region" %}</th>
+                {% if not market %}<th>{% trans "Market" %}</th>{% endif %}
+                <th>{% trans "Execution Method" %}</th>
+                <th class="col-amount">{% trans "Estimated Value" %}</th>
+                <th class="col-check">{% trans "Vendors" %}</th>
+                <th>{% trans "Overall Status" %}</th>
+                <th class="col-actions"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for operation in operations %}
+            {% with rfq=operation.rfqs.all|first %}
+            <tr>
+                <td class="mono"><a href="{% url 'operation_detail' pk=operation.pk %}">{{ operation.operation_no }}</a></td>
+                <td class="mono">
+                    {% if rfq %}
+                    <a href="{% url 'rfq_detail' pk=rfq.pk %}">{{ rfq.request_number }}</a>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                <td title="{{ operation.task_statement }}">{{ operation.task_statement|truncatechars:60 }}</td>
+                <td>{{ operation.requesting_entity|default:"-" }}</td>
+                <td class="mono">{{ operation.project|default:operation.project_name|default:"-" }}</td>
+                <td class="mono">{{ operation.year }}</td>
+                <td>{{ operation.region|default:"-" }}</td>
+                {% if not market %}
+                <td><span class="status-badge status-{{ operation.market }}">{{ operation.get_market_display }}</span></td>
+                {% endif %}
+                <td>{{ operation.execution_method|default:"-" }}</td>
+                <td class="col-amount mono">{{ operation.display_value|default:"-" }}</td>
+                <td class="col-check">
+                    <span class="count-chip">{{ operation.operation_vendors.all|length }}</span>
+                </td>
+                <td>
+                    <span class="status-badge {% if operation.overall_status|lower == 'open' %}status-under_review{% else %}status-completed{% endif %}">
+                        {{ operation.overall_status|default:"-" }}
+                    </span>
+                </td>
+                <td class="col-actions">
+                    <a href="{% if rfq %}{% url 'rfq_detail' pk=rfq.pk %}{% else %}{% url 'operation_detail' pk=operation.pk %}{% endif %}"
+                       class="btn btn-sm">{% trans "Open" %}</a>
+                </td>
+            </tr>
+            {% endwith %}
+            {% empty %}
+            <tr>
+                <td colspan="{% if not market %}13{% else %}12{% endif %}" class="empty-state">{% trans "No operations match your filters." %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<div class="pagination">
+    {% if page_obj.has_previous %}
+    <a class="page-btn" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">&laquo;</a>
+    {% endif %}
+    <span class="page-current">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a class="page-btn" href="?{% if query_string %}{{ query_string }}&amp;{% endif %}page={{ page_obj.next_page_number }}">&raquo;</a>
+    {% endif %}
+    <span class="page-info">{% blocktrans count counter=page_obj.paginator.count %}{{ counter }} record{% plural %}{{ counter }} records{% endblocktrans %}</span>
+</div>
+{% endif %}

@@ -149,7 +149,9 @@ shows 0 occurrences of `#`, `mailto:`, newlines, invalid tokens or bad hosts.
 
 ## Dump instead of import
 
-For a machine without mdbtools, `db/pms_purchasing_2026-09-26.sql.gz` is a
+For a machine without mdbtools, `db/pms_purchasing_2026-09-27.sql.gz` is a
 gzip-compressed `pg_dump` of the exact dataset (see
 [11-operations.md](11-operations.md) for restore/backup commands). Restoring it
-and re-importing from `2026-data.accdb` produce identical counts.
+and re-importing from `2026-data.accdb` produce identical counts. It is dumped
+with `--exclude-table-data=django_session`, so only the schema of that table
+comes back.

@@ -5,48 +5,101 @@ Django 6.1 purchasing-management app. Mirrors the sibling "trunk" project
 
 ## Environment
 
-- WSL distro: `Ubuntu-26.04` (path `\\wsl.localhost\Ubuntu-26.04\home\xinreal\pms-purchasing-django`)
-- Run commands via PowerShell: `wsl -d Ubuntu-26.04 -- bash -lc "..."`
-- Python 3.14.4; venv at `.venv` (activate: `.venv/bin/python`)
-- PostgreSQL 16 on 127.0.0.1:5432; DB `pms_purchasing`, role `xinreal` /
-  `pms_purchasing` (MariaDB still selectable via `DB_ENGINE`,
-  `setup_db.sql` creates that DB/role)
+- Distro: **AlmaLinux 10.2 running inside WSL2** — WSL distro name `AlmaLinux-10`
+  (path `\\wsl.localhost\AlmaLinux-10\home\xinreal\pms-purchasing-django`),
+  hostname `almalinux`, user `xinreal`. Some older notes said `Ubuntu-26.04`;
+  that is wrong — `wslpath -w /` returns `AlmaLinux-10`.
+- Run commands via PowerShell: `wsl -d AlmaLinux-10 -- bash -lc "..."`
+- Python 3.12.14; venv at `.venv` (activate: `.venv/bin/python`)
+- Django 6.1.1 · gunicorn 26.2.0 · nginx 1.26.3 · PostgreSQL 16.15 on
+  127.0.0.1:5432; DB `pms_purchasing`, role `xinreal` / `pms_purchasing`
+  (MariaDB still selectable via `DB_ENGINE`, `setup_db.sql` creates that DB/role)
 - Credentials in `.env` (loaded by `python-dotenv` in settings); every
   variable is documented in `.env.example` — the AD bind password
   (`AUTH_LDAP_BIND_PASSWORD`) must only ever live there, never in source
 - Windows PowerShell quoting is fragile: write scripts to files, then
-  `wsl -d Ubuntu-26.04 -- bash /path/script.sh`. Avoid inline nested quotes.
+  `wsl -d AlmaLinux-10 -- bash /path/script.sh`. Avoid inline nested quotes.
+- `sudo` needs a password (no NOPASSWD); there is no `sshpass`, and
+  `sudo -S` credentials are **not** cached between separate shell calls —
+  pipe the password in every command you need it for.
 
 ## Run
 
+Day-to-day the app runs as a service (see **Deployment** below); `runserver`
+is only for local debugging:
+
 ```bash
+# normal way — nginx serves http://cb.alma.local
+sudo systemctl restart pms-purchasing     # gunicorn, 127.0.0.1:8001
+
+# debug way
 cd /home/xinreal/pms-purchasing-django
 .venv/bin/python manage.py runserver 0.0.0.0:8001
 ```
 
-- App URL: http://localhost:8001 (port 8000 is trunk — do not reuse)
+- App URL: http://cb.alma.local (nginx) or http://localhost:8001 direct
+  (port 8000 is trunk — do not reuse)
 - Login: `admin` / `admin123`
-- Log: `/tmp/pms-server.log`
+- Logs: `/var/log/pms-purchasing/{access,error}.log` (service) ·
+  `/tmp/pms-server.log` (runserver) · `/var/log/nginx/` (web server)
 
 ## Verify
 
 ```bash
+# services first — cb must stay inactive/disabled (the old React app)
+for u in nginx pms-purchasing postgresql cb; do
+  printf '%-16s %s\n' "$u" "$(systemctl is-active $u)"; done
+
 .venv/bin/python manage.py check
 for t in tests/test_*.py; do .venv/bin/python "$t"; done   # server must run on 8001
 bash tests/test_vendor_flows.sh
 msgfmt --statistics -o /dev/null locale/ar/LC_MESSAGES/django.po   # 0 fuzzy/0 untranslated
-grep -c "Internal Server Error" /tmp/pms-server.log                # baseline: 7
+grep -c "Internal Server Error" /tmp/pms-server.log                # baseline: 7 (runserver)
+grep -c "504\|Worker exiting" /var/log/pms-purchasing/error.log    # LDAP hangs show up here
 ```
 
 End-to-end: `GET /en/login/` 200, `GET /ar/login/` 200 (Arabic translations),
 POST credentials → 302, `GET /en/dashboard/` 200 shows "Welcome back, admin."
 
+## Deployment
+
+`cb.alma.local` → nginx → gunicorn → Django. Full detail, config files in
+full, incident log and troubleshooting table: **`docs/12-deployment.md`**.
+Cheat sheets live outside the repo in `~/deploy/` (`README.md`,
+`check-ad.sh`, `test-login.ps1`) with pre-change copies in `~/deploy-backup/`.
+
+| Thing | Where | Command |
+| --- | --- | --- |
+| nginx vhost | `/etc/nginx/conf.d/cb.alma.local.conf` | `sudo nginx -t && sudo systemctl restart nginx` |
+| app service | `/etc/systemd/system/pms-purchasing.service` | `sudo systemctl restart pms-purchasing` |
+| gunicorn | 3 workers on `127.0.0.1:8001`, enabled at boot | `systemctl status pms-purchasing` |
+| static | `staticfiles/`, re-collected by `ExecStartPost` on every start | restart the service |
+| DNS | `cb.alma.local` → `127.0.0.1` in the Windows hosts file | loopback only, HTTP, no TLS |
+| old app | `cb.service` (Node on `:3000`) — **stopped and disabled** | rollback in `docs/12` §6 |
+
+Non-obvious bits that will bite you:
+
+- nginx runs as user `nginx` and must traverse the home directory:
+  `/home/xinreal` is `0700` + `o+x`. If `/static/` returns 403, that bit is gone.
+- `proxy_set_header Host $host` is required — Django validates
+  `ALLOWED_HOSTS` and CSRF origins against it.
+- gunicorn does **not** serve static files (that's a `runserver` feature), so
+  `/static/` must come from the nginx alias.
+- **LDAP timeouts are real settings**: `AUTH_LDAP_GLOBAL_OPTIONS` /
+  `AUTH_LDAP_CONNECTION_OPTIONS` with `ldap.OPT_NETWORK_TIMEOUT` and
+  `ldap.OPT_TIMEOUT`. The old `AUTH_LDAP_CONNECTION_TIMEOUT = 5` was dead
+  config — django-auth-ldap ignores unknown names **silently** — which is what
+  turned an unreachable AD into a 60 s hang and a `504 Gateway Time-out`.
+
+
 ## Documentation
 
 `docs/` is the complete reference (start at `README.md`): architecture,
 field-level data model, URL/view table, UI system, Access import pipeline,
-dashboard, business workflow, auth/ACL, i18n, testing, operations. Use
-`AGENTS.md` (this file) as the short operational brief.
+dashboard, business workflow, auth/ACL, i18n, testing, operations and
+**deployment** (`docs/12-deployment.md` — nginx/systemd/gunicorn serving
+`cb.alma.local`, the 504/LDAP incident, rollback). Use `AGENTS.md` (this file)
+as the short operational brief.
 
 ## Structure
 
@@ -71,12 +124,14 @@ dashboard, business workflow, auth/ACL, i18n, testing, operations. Use
 - `static/` — copied verbatim from trunk: `css/style.css`, `js/app.js`, `img/logo.svg`
   (logo rebranded with "P")
 - `locale/ar/LC_MESSAGES/django.po` — Arabic translations (388 msgids, 0 fuzzy/0 untranslated)
-- `docs/` — full documentation set (01 architecture … 11 operations),
+- `docs/` — full documentation set (01 architecture … 12 deployment),
   `README.md` — entry point, `tests/` — 5 end-to-end scripts,
-  `db/pms_purchasing_2026-09-26.sql.gz` — compressed PostgreSQL dump,
+  `db/pms_purchasing_2026-09-27.sql.gz` — compressed PostgreSQL dump
+  (restore-verified, `django_session` rows excluded),
   `2026.accdb` + `2026-data.accdb` — legacy Access front/back end (import source)
 - `.env` (git-ignored), `.env.example`, `requirements.txt`
-  (Django==6.1.*, mysqlclient==2.*, python-dotenv==1.*, django-auth-ldap, psycopg2-binary)
+  (Django==6.1.*, mysqlclient==2.*, python-dotenv==1.*, django-auth-ldap,
+  psycopg2-binary, gunicorn)
 
 ## Dashboard
 

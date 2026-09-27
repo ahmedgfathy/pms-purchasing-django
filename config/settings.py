@@ -148,4 +148,19 @@ AUTH_LDAP_USER_ATTR_MAP = {
 }
 AUTH_LDAP_ALWAYS_UPDATE_USER = True
 AUTH_LDAP_CACHE_TIMEOUT = 300
-AUTH_LDAP_CONNECTION_TIMEOUT = 5
+
+# ── LDAP timeouts ──
+# NOTE: django-auth-ldap has no AUTH_LDAP_CONNECTION_TIMEOUT setting — such an
+# unknown name is silently ignored, so the old value here did nothing and an
+# unreachable AD made the bind hang until nginx answered 504. These two are the
+# real knobs: GLOBAL_OPTIONS is applied to the ldap module once,
+# CONNECTION_OPTIONS to every connection right after initialize() and before
+# the bind. Fail fast: connect 5s, server response 10s.
+AUTH_LDAP_GLOBAL_OPTIONS = {
+    ldap.OPT_NETWORK_TIMEOUT: 5,
+    ldap.OPT_TIMEOUT: 10,
+}
+AUTH_LDAP_CONNECTION_OPTIONS = {
+    ldap.OPT_NETWORK_TIMEOUT: 5,
+    ldap.OPT_TIMEOUT: 10,
+}

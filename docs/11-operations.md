@@ -9,9 +9,12 @@ cd /home/xinreal/pms-purchasing-django
 ```
 
 * URL: http://localhost:8001 — login `admin` / `admin123` (dev only).
-* WSL path from Windows: `\\wsl.localhost\Ubuntu-26.04\home\xinreal\pms-purchasing-django`.
+  In normal use it is served by nginx at **http://cb.alma.local** instead —
+  see [12-deployment.md](12-deployment.md).
+* WSL path from Windows: `\\wsl.localhost\AlmaLinux-10\home\xinreal\pms-purchasing-django`
+  (the WSL distro is **AlmaLinux-10**, not Ubuntu — older notes were wrong).
 * Windows/PowerShell quoting is fragile: put commands in a `.sh` file and run
-  `wsl -d Ubuntu-26.04 -- bash /path/script.sh`.
+  `wsl -d AlmaLinux-10 -- bash /path/script.sh`.
 
 ## Environment
 
@@ -48,7 +51,7 @@ AUTH_LDAP_BIND_PASSWORD     # AD bind password — required for LDAP logins only
 
 ```bash
 export PGPASSWORD=pms_purchasing
-gunzip -c db/pms_purchasing_2026-09-26.sql.gz \
+gunzip -c db/pms_purchasing_2026-09-27.sql.gz \
   | psql -h 127.0.0.1 -U xinreal -d pms_purchasing
 ```
 
@@ -76,9 +79,16 @@ Projects 19 · Clients 63 · Cost Centers 72 · Locations 10.
 ```bash
 export PGPASSWORD=pms_purchasing
 pg_dump -h 127.0.0.1 -U xinreal -d pms_purchasing \
+        --exclude-table-data=django_session \
         --no-owner --no-privileges --encoding=UTF8 \
-  | gzip -9 > db/pms_purchasing_$(date +%F).sql.gz          # ~1.3 MB, 2 s
+  | gzip -9 > db/pms_purchasing_$(date +%F).sql.gz          # ~1.2 MB, 2 s
 ```
+
+`--exclude-table-data=django_session` keeps the table (schema is still dumped)
+but omits its rows: the repository is **public**, and a live session key would
+let anyone impersonate a signed-in user. Sessions are rebuilt on the next
+login, so nothing of value is lost. Without that flag the dump contains
+whatever sessions exist at that moment.
 
 The committed dump was verified by restoring it into a scratch database and
 counting every table — do the same after each backup you care about:
@@ -116,8 +126,14 @@ msgfmt --statistics -o /dev/null locale/ar/LC_MESSAGES/django.po   # "388 transl
 ## Static files
 
 * Development: the dev server serves `static/` directly.
-* Production: `.venv/bin/python manage.py collectstatic` → `staticfiles/`
-  (git-ignored) + a real WSGI server (`gunicorn`/`uwsgi` behind nginx).
+* Production (what runs at `cb.alma.local`): nginx aliases
+  `/static/` → `staticfiles/` and does **not** proxy to gunicorn — and
+  gunicorn itself never serves static (that is a `runserver` feature). So the
+  files must be collected.
+* `.venv/bin/python manage.py collectstatic` → `staticfiles/` (git-ignored).
+  The `pms-purchasing.service` unit runs it as `ExecStartPost`, so
+  **`sudo systemctl restart pms-purchasing` is the one command** that makes a
+  CSS/template change visible.
 * After every CSS change bump `style.css?v=` in `templates/core/base.html`
   (`?v=9` today) **and** in `templates/core/login.html` (`?v=2` today).
 
@@ -138,6 +154,11 @@ msgfmt --statistics -o /dev/null locale/ar/LC_MESSAGES/django.po   # "388 transl
 | WSL IP changed after reboot | `172.20.175.167` is dynamic — always use `localhost`/`127.0.0.1` |
 | Import took the RFQ links away | expected: a re-import recreates `Operation` rows and `RFQ.tender` is SET_NULL |
 | Server 500s | `grep -c "Internal Server Error" /tmp/pms-server.log` — the baseline is 7 historical entries; investigate any new one |
+| **`504 Gateway Time-out` when logging in** | LDAP bind hanging against an unreachable AD — **not** a database problem. Confirm the `AUTH_LDAP_GLOBAL_OPTIONS` / `AUTH_LDAP_CONNECTION_OPTIONS` timeouts are present, check AD reachability (`~/deploy/check-ad.sh`). Full incident write-up: [12-deployment.md](12-deployment.md) §4.2 |
+| Login page loads, POST hangs for ~60 s then 504 | same as above; `journalctl -u pms-purchasing -f` will show `simple_bind_s` in the traceback |
+| `/static/...` → 404 after a CSS edit | `collectstatic` not run → `sudo systemctl restart pms-purchasing` |
+| `/static/...` → 403 | nginx cannot traverse `/home/xinreal` (it is `0700` + `o+x`) → `chmod o+x /home/xinreal` |
+| App not answering at `cb.alma.local` | `systemctl status pms-purchasing` + `systemctl status nginx`; `ss -ltnp \| grep 8001` |
 
 ## Gotchas
 

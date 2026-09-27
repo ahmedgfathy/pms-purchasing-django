@@ -3,3 +3,4 @@ mysqlclient==2.*
 python-dotenv==1.*
 django-auth-ldap>=5.0
 psycopg2-binary>=2.9
+gunicorn>=22.0          # production WSGI server (pms-purchasing.service, see docs/12)
